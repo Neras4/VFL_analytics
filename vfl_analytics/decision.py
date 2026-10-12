@@ -20,6 +20,7 @@ def compare_styles(lineups: list[dict], style_prediction: dict,
     number(risk_weight,'risk_weight',minimum=0)
     number(samples,'samples',minimum=100,maximum=100000,integer=True)
     number(seed,'seed',minimum=0,integer=True)
+    samples=int(samples); seed=int(seed)
     if collision_swing is not None:
         number(collision_swing,'collision_swing',minimum=0)
     if not lineups:

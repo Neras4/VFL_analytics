@@ -9,7 +9,11 @@ ABILITY_CODES = ('Ск','Г','Пд','Пк','Д','Км','От','Оп','У','В','
 
 
 def number(value, name, *, minimum=None, maximum=None, positive=False, integer=False):
-    if isinstance(value,bool) or not isinstance(value,Real) or not math.isfinite(value):
+    try:
+        valid=isinstance(value,Real) and not isinstance(value,bool) and math.isfinite(value)
+    except OverflowError:
+        valid=False
+    if not valid:
         raise ValueError(f'{name}: finite number required')
     if integer and int(value) != value:
         raise ValueError(f'{name}: integer required')

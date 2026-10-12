@@ -2,7 +2,7 @@
 import math
 import re
 from .models import Player, STYLE_ALIASES
-from .validation import identity
+from .validation import identity,ABILITY_CODES
 
 
 def _optional_num(value):
@@ -124,6 +124,9 @@ def adapt_roster(snapshot):
             if known is not None and known!=int(known):
                 raise ValueError('Fractional style study percentage')
             fatigue=_optional_num(field('fatigue')); form=_optional_num(field('form'))
+            specials=row.get('specials',detail.get('specials',[]))
+            if isinstance(specials,list):
+                specials=[s+'1' if s in ABILITY_CODES else s for s in specials]
             minutes=info.get('seasonMinutes')
             if minutes is None and isinstance(info.get('usefulness'),dict):
                 minutes=info['usefulness'].get('minutes')
@@ -131,7 +134,7 @@ def adapt_roster(snapshot):
                      fatigue=fatigue,form=form,real_strength=_optional_num(field('realStrength')),
                      favorite_style=favorite,style_known_percent=None if known is None else int(known),
                      nationality=row.get('country',row.get('nationality')),
-                     specials=row.get('specials',detail.get('specials',[])),available=row.get('available'),
+                     specials=specials,available=row.get('available'),
                      value=_optional_num(field('value')),
                      salary_per_tour=_optional_num(field('salaryPerTour',current_contract.get('salaryPerTour'))),
                      played_minutes=_optional_num(minutes),is_league_player=row.get('isLeaguePlayer',False))

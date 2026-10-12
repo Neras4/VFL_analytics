@@ -18,6 +18,9 @@ vfl-analyze = "vfl_analytics.cli:main"
 [tool.setuptools.packages.find]
 include = ["vfl_analytics*"]
 
+[tool.setuptools.package-data]
+vfl_analytics = ["data/*.json", "data/*.gz"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [

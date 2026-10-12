@@ -24,7 +24,9 @@ def make_players(rows):
 
 def plans_from(rows):
     return [PositionPlan(tuple(x["slots"]),x.get("style_position_multipliers",{}),
-                         tuple(tuple(y) for y in x.get("links",[])),x.get('defense_formation')) for x in rows]
+                         tuple(tuple(y) for y in x.get("links",[])),x.get('defense_formation'),
+                         tuple(x['formation_base_slots']) if x.get('formation_base_slots') is not None else None,
+                         x.get('tactical_permissions',{})) for x in rows]
 
 
 def run_request(obj:dict)->dict:

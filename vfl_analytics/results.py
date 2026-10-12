@@ -25,6 +25,8 @@ class CalculationResult:
 
     def __post_init__(self):
         object.__setattr__(self, "status", ResultStatus(self.status))
+        if any(not isinstance(x,str) for x in (self.unit,self.source,self.reason)):
+            raise ValueError('Result unit/source/reason must be strings')
         for value in (self.value, self.lower, self.upper):
             if value is not None:
                 number(value,'result')

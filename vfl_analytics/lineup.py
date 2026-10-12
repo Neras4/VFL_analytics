@@ -6,6 +6,7 @@ from .models import Player, PositionPlan, STYLE_NAMES, base_position, style_id
 from .rules import chemistry_for_player, partial_strength_range, MATCH_SOURCE
 from .results import ResultStatus, CalculationResult, bounded, unknown
 from .validation import number
+from .positions import position_modifier,position_eligibility,validate_formation
 
 
 def _factor(plan,style,slot):
@@ -15,7 +16,11 @@ def _factor(plan,style,slot):
 
 def _eligible(p,slot):
     # Page159 permits field players off profile, with a separate positional penalty.
-    return p.available is not False and (('GK' in p.positions)==(base_position(slot)=='GK'))
+    return p.available is not False and position_eligibility(p.positions,slot)
+
+
+def _position_factor(p,plan,style,slot):
+    return position_modifier(p.positions,slot).value*_factor(plan,style,slot)
 
 
 def _heuristic(p,style,factor):
@@ -42,7 +47,7 @@ def _build_matrix(players,plan,style):
                 continue
             if p.available is None:
                 warnings.add(f'availability_unverified:{p.id}')
-            matrix[si,pi]=_heuristic(p,style,_factor(plan,style,slot))
+            matrix[si,pi]=_heuristic(p,style,_position_factor(p,plan,style,slot))
     return matrix,sorted(warnings)
 
 
@@ -67,7 +72,7 @@ def _bounds(result):
 def _evaluate(players,plan,style,matrix,assign):
     mapping={plan.slots[si]:players[pi] for si,pi in assign.items()}
     by_id={p.id:float(matrix[si,pi]) for si,pi in assign.items() for p in [players[pi]]}
-    values={p.id:partial_strength_range(p,style,_factor(plan,style,slot)) for slot,p in mapping.items()}
+    values={p.id:partial_strength_range(p,style,_position_factor(p,plan,style,slot)) for slot,p in mapping.items()}
     ranges={sid:_bounds(v) for sid,v in values.items()}
     uncertain=any(v.value is None for v in values.values())
     warnings={'captain_real_position_force_not_verified; captain omitted from proxy'}
@@ -137,6 +142,7 @@ def _incumbent_assignment(record,players,plan,style,matrix):
 
 def optimize_lineups(players,plans,styles=None,top_n=3,*,incumbents=None,mode='known_components'):
     number(top_n,'top_n',positive=True,integer=True)
+    top_n=int(top_n)
     if mode not in ('known_components','conservative','pareto'):
         raise ValueError('Unsupported ranking mode')
     if len({p.id for p in players})!=len(players):
@@ -148,6 +154,7 @@ def optimize_lineups(players,plans,styles=None,top_n=3,*,incumbents=None,mode='k
         raise ValueError('Bounded search supports <=32 plans and <=200 players')
     all_results=[]; invalid=[]
     for plan in plans:
+        formation=validate_formation(plan.slots,plan.defense_formation,plan.formation_base_slots,plan.tactical_permissions)
         for style in styles:
             matrix,warnings=_build_matrix(players,plan,style)
             best=_solve_assignment(matrix)
@@ -169,6 +176,9 @@ def optimize_lineups(players,plans,styles=None,top_n=3,*,incumbents=None,mode='k
             evaluations=[_evaluate(players,plan,style,matrix,a) for a in candidates]
             for item in evaluations:
                 item.update(slots=list(plan.slots),variants_considered=len(candidates),incumbents_retained=retained)
+                item['formation_validation']=formation
+                if formation['unverified_tactical_slots']:
+                    warnings.append('special_position_tactical_permissions_unverified')
                 item['warnings']=sorted(set(item['warnings']+warnings))
                 if mode=='conservative':
                     lower=item['partial_model_range'].get('lower',item['partial_model_range'].get('value'))

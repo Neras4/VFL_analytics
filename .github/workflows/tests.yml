@@ -19,4 +19,5 @@ jobs:
           cache: pip
       - run: python -m pip install -c requirements-lock.txt -e '.[test]'
       - run: python -m pytest -q -p no:cacheprovider
+      - run: python -m vfl_analytics.rule_data
       - run: python -m vfl_analytics.cli examples/usefulness.json

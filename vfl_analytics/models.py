@@ -88,7 +88,13 @@ class Player:
             raise ValueError('available must be boolean or null')
         if self.nationality is not None and (not isinstance(self.nationality,str) or not self.nationality.strip()):
             raise ValueError('nationality must be a nonempty string or null')
-        special_list(self.specials)
+        object.__setattr__(self,'specials',special_list(self.specials))
+        if self.specials:
+            from .abilities import ability_profile_eligible
+            from .validation import special
+            for token in self.specials:
+                if not ability_profile_eligible(special(token)[0],self.positions):
+                    raise ValueError('Special ability incompatible with native profile')
         if self.style_known_percent is not None and (isinstance(self.style_known_percent, bool)
                 or not isinstance(self.style_known_percent, int)
                 or self.style_known_percent not in (0, 20, 40, 60, 80, 100)):
@@ -139,6 +145,8 @@ class PositionPlan:
     # A link is between slot IDs (e.g. CM1 -> DM), NOT players. May be empty.
     links: tuple[tuple[str, str], ...] = ()
     defense_formation: str | None = None  # 'line' or 'sweeper'; explicit tactical context.
+    formation_base_slots: tuple[str,...] | None = None
+    tactical_permissions: dict[str,bool|None] = field(default_factory=dict)
 
     def __post_init__(self):
         if not isinstance(self.slots,(tuple,list)) or any(not isinstance(s,str) for s in self.slots):
@@ -166,6 +174,8 @@ class PositionPlan:
                 raise ValueError('Invalid chemistry link')
         if len({frozenset(x) for x in self.links})!=len(self.links):
             raise ValueError('Duplicate chemistry link')
+        from .positions import validate_formation
+        validate_formation(self.slots,self.defense_formation,self.formation_base_slots,self.tactical_permissions)
 
 
 def base_position(slot: str) -> str:
