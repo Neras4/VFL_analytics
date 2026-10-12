@@ -134,7 +134,7 @@ def adapt_roster(snapshot):
                      fatigue=fatigue,form=form,real_strength=_optional_num(field('realStrength')),
                      favorite_style=favorite,style_known_percent=None if known is None else int(known),
                      nationality=row.get('country',row.get('nationality')),
-                     specials=specials,available=row.get('available'),
+                     specials=specials,specials_known='specials' in row or 'specials' in detail,available=row.get('available'),
                      value=_optional_num(field('value')),
                      salary_per_tour=_optional_num(field('salaryPerTour',current_contract.get('salaryPerTour'))),
                      played_minutes=_optional_num(minutes),is_league_player=row.get('isLeaguePlayer',False))

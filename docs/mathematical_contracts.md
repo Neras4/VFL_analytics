@@ -1,4 +1,49 @@
-# Математические контракты v0.2.1
+# Математические контракты v0.2.2
+
+## Изменения v0.2.2
+
+`rule_data.load_rule_data/validate_all` загружают versioned package resources,
+проверяют SHA256/schema/domain и возвращают caller-owned copies. Повреждения —
+RuleDataError, никакого численного fallback. Software version не заменяет rule version.
+
+`position_modifier(native_positions,slot)` — EXACT fraction либо NOT_APPLICABLE
+для GK/outfield. Native позиции игроков: одна/две изGK/LD/CD/RD/LM/CM/RM/LF/CF/RF,
+совмещения только опубликованные. DM/AM/... — tactical slots, не native profiles.
+`style_position_category` отдельно возвращает category/categories и численный UNKNOWN.
+
+`ability_definition/catalog` —21 источников/условий; `ability_lookup` выбирает
+изолированный numeric parameter по level1–4, style/age/category/vector index.
+Результаты moment/fatigue/economic имеют отдельные units/scopes. `ability_components`
+не вычисляет суммарную силу. `captain_coefficient/contribution`,
+`donor_contributions`, `penalty_bonus`, `idol_attendance`, `commercial_ticket_price`
+реализуют применимые отдельные зависимости; комбинирование всех эффектов UNKNOWN.
+Реальные bases требуют explicit strength_basis_verified. Collector realStrength
+не подставляется автоматически. Ka не сводится к обычной возрастной формуле.
+
+`weather_strength(player_style,nominal_strength,weather,temperature_c)` —
+EXACT displayed strength_points, не multiplier; style означает любимый стиль
+игрока. Неподдерживаемая strength/weather/temp либо normal дают UNKNOWN;
+неизвестные названия и некорректные численные типы отклоняются.
+`cohesion_bonus(ids,history,history_complete=False)` — latest-first same-season
+competitive participants; точная сумма, conservative trailing bounds или UNKNOWN.
+
+`evaluate_player` возвращает PlayerEvaluation с компонентами и UNKNOWN full force.
+Partial estimate — явная legacy-product гипотеза. `optimize_lineups` теперь
+принимает mode/context/incumbents, сохраняет неизвестных игроков и источники.
+Стилевые интервалы не заменяются midpoint. Три режима описаны в pipeline.
+Отсутствие captain base даёт UNKNOWN candidate, не пропуск игроков с Ка.
+
+API изменения: form75–125; native special profiles вроде('DM',) отклоняются.
+`Player.specials_known` различает отсутствующий экспорт и подтверждённый список.
+Bare collector code нормализуется в level1; core tokens остаются явными code1–4.
+`included_age_captain_bonus` может быть null; капитан возвращается только по
+отдельному подтверждённому компоненту. `partial_total` остаётся условным subtotal,
+при bounded/unknown core inputs — null. Legacy baseline_strength возвращает
+None при неизвестном стиле, но eligibility больше не зависит от этого ответа.
+Transfer legacy numeric partial delta сопровождается typed ESTIMATED/UNKNOWN;
+полная economic_value всегда UNKNOWN. До full order нет официальной общей силы.
+
+Ниже сохранены контракты v0.2.1, кроме явно переопределённых пунктов выше.
 
 `CalculationResult` — неизменяемый dataclass, `ResultStatus` — строковый enum.
 `to_dict()` выдаёт JSON-совместимый объект. Численного приведения нет.

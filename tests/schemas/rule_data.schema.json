@@ -1,0 +1,13 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "type":"object","required":["schema_version","provenance"],
+  "properties":{
+    "schema_version":{"type":"string","pattern":"^vfl-"},
+    "provenance":{"type":"object","required":["research_artifact","research_sha256","retrieved_at","official_sources"],
+      "properties":{"research_artifact":{"type":"string"},"research_sha256":{"type":"string","pattern":"^[a-f0-9]{64}$"},
+        "retrieved_at":{"type":"string"},"official_sources":{"type":"array","minItems":1,"items":{
+          "type":"object","required":["name","url","sha256","bytes"],
+          "properties":{"url":{"type":"string","pattern":"^https://vfliga\\.com/"},
+            "sha256":{"type":"string","pattern":"^[a-f0-9]{64}$"},"bytes":{"type":"integer","minimum":1}}}}}}
+  }
+}

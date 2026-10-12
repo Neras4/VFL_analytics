@@ -187,7 +187,11 @@
         "RM",
         "AM",
         "CF"
-      ]
+      ],
+      "tactical_permissions": {
+        "DM": true,
+        "AM": true
+      }
     }
   ],
   "styles": [

@@ -1,26 +1,153 @@
 {
-  "ruleset_name": "all_rules(1).md project snapshot",
-  "snapshot_date": "2026-09-28",
-  "game_season": "unverified_for_current_live_site",
-  "source": "Virtual Soccer Lig project library: all_rules(1).md",
-  "exact_components": [
-    {"id":"fatigue_reduction","section":"2.5","state":"implemented","note":"percentage reduction"},
-    {"id":"favorite_style_bonus","section":"2.10","state":"implemented","note":"0.5% per studied 20%, max 2.5%"},
-    {"id":"player_style_collision","section":"2.10","state":"implemented","note":"-1%"},
-    {"id":"style_collision_cycle","section":"2.11","state":"implemented","note":"direction only, not size"},
-    {"id":"captain_age","section":"2.8","state":"partial","note":"without Ka"},
-    {"id":"mutual_understanding","section":"2.12","state":"partial","note":"requires known links and styles"},
-    {"id":"defense_type","section":"2.13","state":"implemented","note":">3 attacking players: zonal"},
-    {"id":"youth_growth","section":"young player end-season growth","state":"implemented","note":"ages 16-23 thresholds"},
-    {"id":"veteran_usefulness","section":"veteran season usefulness","state":"partial","note":">=55%, excludes training award conditions"}
+  "schema_version": "rules-registry/2",
+  "engine_version": "0.2.2",
+  "retrieved_at": "2026-10-12",
+  "sources": {
+    "positions": {
+      "url": "https://vfliga.com/rules.php?page=159",
+      "version": "2.1",
+      "date": "2024-10-10"
+    },
+    "management": {
+      "url": "https://vfliga.com/rules.php?page=40",
+      "version": "19.2",
+      "date": "2025-05-07"
+    },
+    "abilities": {
+      "url": "https://vfliga.com/rules.php?page=64",
+      "version": "14.0",
+      "date": "2024-06-23"
+    },
+    "cohesion": {
+      "url": "https://vfliga.com/rules.php?page=167",
+      "version": "2.0",
+      "date": "2020-03-30"
+    },
+    "season": {
+      "url": "https://vfliga.com/rules.php?page=70",
+      "version": "14.0",
+      "date": "2023-07-15"
+    },
+    "weather": {
+      "url": "https://vfliga.com/weather.php",
+      "version": null,
+      "date": null
+    }
+  },
+  "rule_version_is_not_engine_version": true,
+  "implemented_components": [
+    {
+      "id": "position_suitability",
+      "status": "EXACT isolated cell",
+      "source": "positions",
+      "unit": "fraction"
+    },
+    {
+      "id": "style_position_category",
+      "status": "QUALITATIVE; numeric UNKNOWN",
+      "source": "management",
+      "unit": "category"
+    },
+    {
+      "id": "favorite_style",
+      "status": "EXACT/BOUNDED",
+      "source": "management",
+      "unit": "fraction"
+    },
+    {
+      "id": "special_abilities",
+      "status": "21 catalogs and isolated numeric selectors; combined force UNKNOWN",
+      "source": "abilities"
+    },
+    {
+      "id": "captain_age_Ka",
+      "status": "EXACT conditional on verified real positional base",
+      "source": "abilities",
+      "unit": "strength_points"
+    },
+    {
+      "id": "donor_I_L",
+      "status": "EXACT individual deltas / UNKNOWN base or stacking",
+      "source": "abilities",
+      "unit": "strength_points"
+    },
+    {
+      "id": "chemistry",
+      "status": "EXACT/BOUNDED/NOT_APPLICABLE",
+      "source": "management",
+      "unit": "fraction"
+    },
+    {
+      "id": "cohesion",
+      "status": "EXACT/BOUNDED/UNKNOWN",
+      "source": "cohesion",
+      "unit": "fraction"
+    },
+    {
+      "id": "weather",
+      "status": "EXACT displayed cells / UNKNOWN unsupported domain",
+      "source": "weather",
+      "unit": "strength_points",
+      "logical_cells": 58464
+    },
+    {
+      "id": "collision",
+      "status": "EXACT direction; magnitude UNKNOWN",
+      "source": "management",
+      "unit": "categorical"
+    },
+    {
+      "id": "youth_veteran_usefulness",
+      "status": "EXACT arithmetic, scenario planning",
+      "source": "season",
+      "unit": "percent/minutes"
+    }
+  ],
+  "model_components": [
+    {
+      "id": "partial_product_and_search_proxy",
+      "status": "ESTIMATED or conditional BOUNDED",
+      "official_force": false
+    },
+    {
+      "id": "opponent_and_collision_scenarios",
+      "status": "ESTIMATED not calibrated",
+      "official_probability": false
+    }
   ],
   "missing_or_unverified": [
-    {"id":"position_style_modifiers","why":"numeric position bonuses are embedded in styles.png image"},
-    {"id":"out_of_position_coefficients","why":"separate rules section must be formalized"},
-    {"id":"special_ability_matrix","why":"needs exact tables and order"},
-    {"id":"weather_and_home","why":"numeric modifiers not yet validated"},
-    {"id":"generator_goal_probabilities","why":"not directly disclosed"},
-    {"id":"fatigue_transition","why":"requires stamina rules and schedule"},
-    {"id":"manager_behavior_calibration","why":"requires chronological actual match data"}
-  ]
+    {
+      "id": "full_modifier_order",
+      "why": "Not established by component tables"
+    },
+    {
+      "id": "position_style_modifiers",
+      "why": "styles.png contains qualitative colors; no numerical percentages published"
+    },
+    {
+      "id": "real_export_acceptance",
+      "why": "SYNTHETIC fixtures only; v0.2.3"
+    },
+    {
+      "id": "complete_legal_formations_League_reserves",
+      "why": "Full context absent"
+    },
+    {
+      "id": "calibrated_WDL_and_full_ROI",
+      "why": "Requires observed histories/economic contracts"
+    }
+  ],
+  "audit_status": {
+    "AUD-06": "PARTIAL: real-base gate and component honesty fixed; order unknown",
+    "AUD-07": "PARTIAL: published suitability/transformation implemented; full legal catalog absent",
+    "AUD-08": "FIXED incumbent loss; nonlinear optimality still explicitly unproven",
+    "AUD-09": "PARTIAL static contract + synthetic fixtures; real exports deferred",
+    "AUD-10": "DEFERRED chronological calibration",
+    "AUD-11": "DEFERRED predictive uncertainty",
+    "AUD-12": "DEFERRED collision magnitude; scenario remains explicit",
+    "AUD-13": "PARTIAL 21 catalogs/captain/weather/cohesion added; full mechanics not combined",
+    "AUD-14": "FIXED in0.2.1 retained",
+    "AUD-15": "FIXED qualitative source labeling",
+    "AUD-16": "DEFERRED full economic ROI"
+  }
 }

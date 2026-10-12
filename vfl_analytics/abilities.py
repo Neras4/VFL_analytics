@@ -1,6 +1,7 @@
 """21-ability catalog and isolated coefficient lookups, not a combined force sum."""
 import copy
 from fractions import Fraction
+from functools import lru_cache
 from .rule_data import _data
 from .models import style_id,base_position
 from .validation import number,positions
@@ -15,17 +16,24 @@ def catalog():
     return copy.deepcopy(_data('abilities.json')['abilities'])
 
 
-def ability_definition(code):
+@lru_cache(maxsize=21)
+def _definition(code):
     if not isinstance(code,str):
         raise ValueError('Ability code must be a string')
     entry=next((a for a in _data('abilities.json')['abilities'] if a['code']==code),None)
     if entry is None:
         raise ValueError('Unknown ability code')
-    return copy.deepcopy(entry)
+    return entry
+
+
+def ability_definition(code):
+    if not isinstance(code,str):
+        raise ValueError('Ability code must be a string')
+    return copy.deepcopy(_definition(code))
 
 
 def ability_profile_eligible(code,native_positions):
-    native=set(positions(native_positions)); allowed=ability_definition(code)['eligible_profiles']
+    native=set(positions(native_positions)); allowed=_definition(code)['eligible_profiles']
     profile={'all':True,'outfield':'GK' not in native,'goalkeeper':native=={'GK'},
         'defender':bool(native&{'LD','CD','RD'}),'midfielder':bool(native&{'LM','CM','RM'}),
         'forward':bool(native&{'LF','CF','RF'})}
@@ -38,7 +46,7 @@ def ability_lookup(code,level,effect_kind,parameter,*,style=None,age=None,catego
     A coefficient does not assert that its activation conditions hold in a match.
     Distribution/vector fields require an index/category; no implicit total.
     """
-    definition=ability_definition(code)
+    definition=_definition(code)
     number(level,'ability level',minimum=1,maximum=4,integer=True)
     effect=next((e for e in definition['effects'] if e['kind']==effect_kind),None)
     if effect is None or parameter not in effect:
@@ -86,6 +94,10 @@ def ability_lookup(code,level,effect_kind,parameter,*,style=None,age=None,catego
         unit='percentage_points_per_90_minutes' if 'per_90' in parameter else 'percentage_points'
     if 'severity' in effect_kind:
         unit='conditional_probability'
+    elif effect_kind=='injury_incidence_multiplier':
+        unit='multiplier'
+    elif effect_kind in ('attacking_foul_or_penalty_earning','defensive_card_probability'):
+        unit='relative_probability_change'
     return exact(value,unit=unit,source=source,reason='Isolated published coefficient; activation, base and order remain separate')
 
 
@@ -141,8 +153,8 @@ def effect_scope(kind):
 
 def captain_coefficient(age,ka_level=0):
     validate_age(age); number(ka_level,'Ka level',minimum=0,maximum=4,integer=True)
-    effect=ability_definition('Ка')['effects'][0]
-    return exact(effect['by_level_and_age'][str(int(ka_level))][str(age)],source=ability_definition('Ка')['source'],
+    effect=_definition('Ка')['effects'][0]
+    return exact(effect['by_level_and_age'][str(int(ka_level))][str(age)],source=_definition('Ка')['source'],
                  reason='Age/Ka table; strength-base and weak-captain gate separate')
 
 
@@ -150,6 +162,11 @@ def captain_contribution(age,ka_level,captain_id,on_pitch_strengths,*,strength_b
     coeff=captain_coefficient(age,ka_level); source=coeff.source
     if not isinstance(strength_basis_verified,bool) or not isinstance(unresolved_modifiers,bool):
         raise ValueError('Verification/modifier flags must be boolean')
+    if on_pitch_strengths is not None:
+        if not isinstance(on_pitch_strengths,dict):
+            raise ValueError('On-pitch strengths must be a mapping')
+        for value in on_pitch_strengths.values():
+            if value is not None: number(value,'real positional force',minimum=0)
     if on_pitch_strengths is None or not strength_basis_verified or unresolved_modifiers:
         return unknown(unit='strength_points',source=source,reason='Verified current real positional forces required; partial/collector force is not an unconditional substitute')
     if not isinstance(on_pitch_strengths,dict) or captain_id not in on_pitch_strengths or not 2<=len(on_pitch_strengths)<=11:
@@ -170,7 +187,16 @@ def donor_contributions(players_by_slot,on_pitch_strengths,*,kind='И',strength_
     """Individual И and exactly-one-per-line Л contributions. No unverified stacking."""
     if kind not in ('И','Л') or not isinstance(strength_basis_verified,bool):
         raise ValueError('Invalid donor context')
+    if on_pitch_strengths is not None:
+        if not isinstance(on_pitch_strengths,dict):
+            raise ValueError('Donor strengths must be a mapping')
+        for force in on_pitch_strengths.values():
+            if force is not None: number(force,'donor force',minimum=0)
     definition=ability_definition(kind); effect=definition['effects'][0]
+    if len({p.id for p in players_by_slot.values()})!=len(players_by_slot):
+        raise ValueError('Duplicate on-field player')
+    if any(not p.specials_known for p in players_by_slot.values()):
+        return {p.id:unknown(unit='strength_points',source=definition['source'],reason='Some on-field specials are unobserved').to_dict() for p in players_by_slot.values()}
     donors=[]
     from .validation import special
     for slot,p in players_by_slot.items():
@@ -231,7 +257,10 @@ def penalty_bonus(taker_strength,taker_level,goalkeeper_level,helpers=(),*,taker
     aid=[]
     for helper in helpers:
         number(helper['level'],'helper level',minimum=1,maximum=4,integer=True)
-        number(helper['strength'],'helper force',minimum=0)
+        if helper.get('strength') is not None:
+            number(helper['strength'],'helper force',minimum=0)
         if helper['level']>=goalkeeper_level:
+            if helper.get('strength') is None:
+                return unknown(unit='strength_points',source=source,reason='Eligible helper moment force missing')
             aid.append(effects['outfield_helper']['by_level'][int(helper['level'])-1]*helper['strength'])
     return exact(max([own,*aid]),unit='strength_points',source=source,reason='Own bonus or strongest eligible aid; GK own shooting bonus excluded')

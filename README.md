@@ -1,98 +1,99 @@
-# VFL Analytics Engine v0.2.1
+# VFL Analytics Engine v0.2.2
 
-Core correctness release: AUD-01/02/03/04/05/14 corrected. Baseline: 12 tests;
-current suite: 111 tests, including 99 added cases and 15 selected research
-vectors. See [changes](docs/v0.2.1_changes.md), [mathematical contracts](docs/mathematical_contracts.md),
-[baseline](docs/baseline_v0.1.md), [limitations](docs/known_limitations.md), and
-[v0.2.2 backlog](docs/v0.2.2_backlog.md).
+Расширяемое математическое ядро VFL с явной неопределённостью. Использует
+опубликованные таблицы и проверенные отдельные компоненты; полная сила
+закрытого генератора и вероятности исхода матча не воспроизводятся.
 
-Usefulness is half-up rounded BEFORE youth/veteran thresholds; 93/90 minutes
-is valid and gives 103%. Minimum integer minutes use T-0.5, conditional on the
-final team-minute scenario. Missing study percentage remains null. Chemistry
-now has explicit point/interval/unknown contracts, and interval strength is
-never substituted into Decision/Transfer as a point.
+## Установка и запуск
 
-**Status:** locally runnable proof of concept; **not a validated VFL generator**; **not a deployed MCP server**. The package does not log in to VFL, store credentials, make network calls, or submit lineups/bids.
-
-This project is the first independently testable **mathematical core** discussed for Aries, Maastricht, and Kariari. It takes normalized JSON (or a compatible subset of VFL Assistant v0.5.11 JSON), computes verifiable calculations, shows uncertainty, and emits JSON suitable for future MCP wrapping.
-
-## What's implemented
-
-| Action | Executes now | Exact vs approximate |
-|---|---|---|
-| `collision` | Directed six-style collision matrix | Exact rule |
-| `adapt` | Basic `roster.players` normalization from Assistant | Validates, conservative; **not yet tested against real exported JSON** |
-| `lineup` | Complete 11-player assignment across selected schemes/styles, compatible position filter, favorite-style, fatigue/form, partially modeled captain/chemistry; ranks alternatives | Exact *linear subproblem*; full score is **partial estimate** |
-| `opponent` | Recency/context-weighted Dirichlet-style probabilities, 90% approximate intervals, conditional collision exposure | **Approximate**, uncalibrated |
-| `strategy` | Joins `lineup` + `opponent`; optional sensitivity to an *explicitly assumed* collision swing | No automatic winner unless assumption passed |
-| `transfer` | Candidate's **marginal** partial lineup-strength gain, price/available cash check | Partial, no projected resale or actual win probability |
-| `usefulness` | Youth growth table 16–23, 55% veteran usefulness, minimum minutes required over projected denominator | Exact thresholds; fixture availability not yet jointly optimized |
-
-## Getting started
-
-Python 3.11+; requires NumPy + SciPy (optional PyTest for tests).
+Python 3.11 или 3.12. Зависимости закреплены; CI устанавливает проект из
+pyproject.toml и выполняет тесты, проверку таблиц/JSON и benchmark.
 
 ```bash
 python -m venv .venv
-# Windows PowerShell: use .\.venv\Scripts\python.exe for commands below.
-# Linux/macOS: use .venv/bin/python.
-python -m pip install -r requirements-lock.txt
-python -m vfl_analytics.cli examples/strategy.json
-python -m vfl_analytics.cli examples/lineup.json
-python -m vfl_analytics.cli examples/opponent.json
-python -m vfl_analytics.cli examples/usefulness.json
-python -m vfl_analytics.cli examples/transfer.json
+# Активируйте .venv или используйте её интерпретатор явно.
+python -m pip install -c requirements-lock.txt -e '.[test]'
 python -m pytest -q -p no:cacheprovider
+python -m vfl_analytics.rule_data
+python -m vfl_analytics.cli examples/evaluate_player.json
+python benchmarks/optimizer.py
 ```
 
-Input is one `action` request. Output is JSON. Every example uses **synthetic** players or fabricated demonstration match histories, never presented as VFL live facts.
+Windows PowerShell: вместо python используйте `.\.venv\Scripts\python.exe`.
+Linux/macOS: `.venv/bin/python`. Расчёты и CI работают офлайн, без VFL login.
 
-## Key rule-backed formulas
+## Возможности
 
-- `S_partial = strength × (form / 100) × (1 − fatigue / 100) × known_style_factor × externally_verified_position_style_factor`
-  - Real game generator includes more factors. This is a *transparent partial model*, not exact generator strength.
-  - Missing fatigue/form means player is **ineligible for numeric optimization** until provided; `null` is not zero. Missing availability means **hypothetical lineup only** (`availability_unverified` warning), not submission-ready.
-- Fully studied favorite style matching our style: +2.5%; incomplete studied favorite: +0.5/1/1.5/2% for 20/40/60/80%.
-- Player favorite style colliding with our selected style: −1%; unknown favorite: bounded, **not assumed**. Numeric optimization for non-normal style requires a known multiplier; uncertain players remain ineligible with explicit warnings.
-- Captain: rules 2.8 age bonus, only for players without unmodeled `Ка` special. 33 years: 7% of the captain's field strength added to each other player if captain >= on-field average. Captains with Ка are deliberately **not evaluated**.
-- Directed chemistry links: line modifier towards player A depends on study of neighbor B. Same nationality enforces >=5%; fully known different-nationality colliding styles: −5%; equal actual styles: 12.5% × other player's study fraction. Requires **explicit lineup geometry** (`links`). Incomplete evidence returns bounds; League/empty endpoints give zero and count in the denominator.
-- Youth: age-dependent useful-playing-time thresholds; in particular 16yo 20% -> +10, 17yo 28% -> +9, 18yo 38% -> +8, 19yo 44% -> +7.
-- Veterans: rounded usefulness >=55% is *useful*, but bonus training requires extra qualifications (role, retirement). Feasibility is null without a separately supplied player-minute availability budget.
-- Defense: zone when opponent fields >3 attacking positions; personal otherwise.
+| CLI action | Результат | Достоверность |
+|---|---|---|
+| position | Профиль/совмещение/непрофильная/специальная позиция | EXACT отдельный коэффициент; категория командного стиля отдельно |
+| weather | Любимый стиль игрока, номинальная сила, погода/температура | EXACT опубликованная ячейка или UNKNOWN неподдерживаемый вход |
+| ability / catalog | Все21 спецвозможностей, уровни1–4, параметры и условия | Отдельные коэффициенты; разные фазы, без общей суммы силы |
+| captain | Возраст/Ка, сила на позиции и средняя сила | EXACT при подтверждённых реальных базах, иначе UNKNOWN |
+| cohesion | История участников последних нетоварищеских игр | EXACT или BOUNDED/UNKNOWN при неполной истории |
+| evaluate_player | PlayerEvaluation со всеми компонентами | ESTIMATED/BOUNDED partial, UNKNOWN full force |
+| lineup | Быстрый поиск и сравнение кандидатов | Эвристика; known_components / conservative / pareto |
+| transfer | Сохранение прежнего состава, сравнимый search delta | ESTIMATED известной части; UNKNOWN полный эффект/ROI |
+| adapt | Контракт Assistant0.5.11, joins и null-семантика | SYNTHETIC golden fixtures; настоящие экспорты ещё не проверены |
+| opponent / strategy | Прежняя модель стилей и явные collision scenarios | Непроверенные статистические предположения |
+| collision / usefulness | Направление коллизии и сезонные границы минут | Опубликованные отдельные правила |
+| validate_rules | SHA256, версии, структуры упакованных таблиц | Офлайн-проверка целостности |
 
-## Optimizer: precise scope
+Примеры: `examples/position.json`, `weather.json`, `ability.json`, `captain.json`,
+`cohesion.json`, `evaluate_player.json`, `lineup.json`, `strategy.json`, `transfer.json`.
+Все игровые входы в примерах SYNTHETIC.
 
-For each `(formation, style)` the initial player/slot matching solves a linear assignment using SciPy's Hungarian algorithm. It explores alternatives by excluding each selected edge and re-solving, then ranks these lineups using the included captain and chemistry effects. This is **not globally exact for nonlinear interactions**. Only native listed positions are accepted by default. No unsourced out-of-position penalties or style-color bonuses are invented. You can supply verified position-style factors via `style_position_multipliers`, but provenance should be attached in the calling application.
+## Контракты и ограничения
 
-If style-position factors, captain special effects or geometry are missing, the result carries explicit warnings. Do not select a match tactic by partial strength score alone.
+EXACT, BOUNDED, ESTIMATED, UNKNOWN, NOT_APPLICABLE сохраняются через Python API
+и CLI JSON. Неизвестное значение не становится нулём, единицей или midpoint.
+Неизвестный стиль/форма не исключают законного игрока: для поиска используется
+явный proxy; окончательная сила остаётся неопределённой. Captain/И/Л требуют
+отдельно подтверждённых реальных сил на назначенных позициях. `realStrength`
+из коллектора не является автоматической заменой этих баз.
 
-## Opponent model: precise scope
+Позиционное соответствие и цвет командного стиля — разные компоненты.
+Взаимопонимание и история сыгранности — разные компоненты. Погода использует
+**любимый стиль игрока**, а не выбранный командный стиль, и возвращает силу,
+а не процентный множитель. Native table не содержит нормального стиля.
 
-`alpha_s = prior_strength / K + Σ_i 1[style_i=s] × 2^(−days_i / half_life_days) × similarity_i`, with `K=7`, normalized to categorical style probabilities. `similarity` depends on home/away and opponent strength if supplied; those weights are **unverified modeling assumptions**. The ``posterior_alpha`` is a recency-weighted pseudo-posterior, **not** a calibrated probability model. The returned beta marginal intervals are only internal approximation under that assumed model.
+21 спецвозможность доступна в каталоге и через изолированные selectors;
+моментные, экономические, вероятностные и fatigue-эффекты не складываются
+в prematch strength. Полный порядок всех модификаторов неизвестен.
+`partial_total`/`ranking_score` — условная модель, не официальная реальная сила.
+Pareto и lower-bound режимы относятся к этой модели. Глобальный нелинейный
+оптимум и окончательная рекомендация не заявляются.
 
-Need **time-split backtesting**: proper style log-loss/Brier score against uniform, raw-frequency and recency-frequency baselines. As evidence accumulates, learn rather than guess similarity weights. Detect manager changes and tactical response to opponent/style/fixture importance. For a new manager, the prior dominates; the engine must show low confidence.
+Normal/Deep реальные экспорты и исторические матчи принадлежат v0.2.3.
+VFL Assistant не изменён; модель не входит на сайт, не отправляет составы
+и не выполняет трансферы.
 
-## Decision model
+## Проверка источников
 
-For each candidate our style `a` with partial lineup score `S_a`, opponent-style distribution `P(b)` and a **supplied** assumed collision swing `C` measured in the *same score units*:
+Research manifest проверен:30/30. Все21 таблицы спецвозможностей сверены с
+официальным page64:385 числовых ячеек. Погодные таблицы двух школ сверены
+полностью:19488 ячеек, представляющих58464 логических ячейки шести стилей.
+Таблицы упакованы с provenance, версиями и SHA256; большая погода сжата gzip
+и загружается через cache. Цветная позиционная матрица остаётся качественной.
 
-`U(a) = S_a + C × Σ_b P(b) × collision_sign(a,b)`
+Источники: [позиции](https://vfliga.com/rules.php?page=159),
+[спецвозможности](https://vfliga.com/rules.php?page=64),
+[управление](https://vfliga.com/rules.php?page=40),
+[сыгранность](https://vfliga.com/rules.php?page=167),
+[погода](https://vfliga.com/weather.php),
+[сезон](https://vfliga.com/rules.php?page=70).
 
-This is a **sensitivity scenario**, not VFL's collision formula and **not** probability of winning a match. `risk_weight` penalizes standard deviation across Monte Carlo samples from the categorical pseudo-posterior; seed is fixed/reproducible. With `collision_swing = null`, the engine intentionally abstains and returns each style's `P(win collision)` / `P(lose collision)` separately.
+## Документация
 
-## Source provenance
+- [Изменения и checkpoints](docs/v0.2.2_changes.md)
+- [Покрытие правил](docs/rule_coverage.md)
+- [Pipeline и ranking modes](docs/calculation_pipeline.md)
+- [Математические API](docs/mathematical_contracts.md)
+- [Контракт Assistant и пробелы](docs/data_gaps.md)
+- [Ограничения](docs/known_limitations.md)
+- [План v0.2.3](docs/v0.2.3_backlog.md)
+- [Проверенные числовые ячейки источников](docs/source_verification.json)
+- [Benchmark](benchmarks/results_v0.2.2.json)
 
-For v0.2.1, primary references are [management rules page 40](https://vfliga.com/rules.php?page=40), version 19.2, and [season rules page 70](https://www.vfliga.com/rules.php?page=70), version 14.0. Version/retrieval limitations and archive checksums are in the release documentation. SPEC_RU.md and rules_registry.json preserve the historical v0.1 research context; their unresolved claims are not new verified coefficients (see AUD-15 backlog).
-
-VFL collector reference: [Neras4/vfl-assistant-extension](https://github.com/Neras4/vfl-assistant-extension) v0.5.11, especially `content.js` `extractJPlayers()`, `rosterCompact()`, `parsePlayerInfo()`, `mergePlayerDetails()`. This archive does **not** embed the extension or credentials.
-
-## Roadmap (not implemented yet)
-
-1. Validate `adapt` against representative **redacted** v0.5.11 Normal/Deep exports, preserving source `null`, and build a golden JSON contract suite.
-2. Validate/encode the official positional eligibility/penalty table and style-position matrix (in rules these are also images), plus special abilities and captain Ка; only then allow a meaningful overall squad-strength comparison.
-3. Add conditional coach behavior (formation, tactical transitions, substitutions) with history sourced by collector; evaluate using chronological cross-validation.
-4. Calibrate actual match outcomes against real match historical data (win/draw/loss and scores) **without leaking post-match data**; no outcome model currently ships.
-5. Optimize next 3–5 matches jointly, incorporate rigorously calculated fatigue changes, minutes quotas, finances, morale and injuries.
-6. Wrap validated commands into authenticated, **read-only** MCP tools; deploy collector/session separately on VPS.
-
-**Explicit exclusion:** No login, VFL cookies, MCP network transport or automatic actions are implemented. Those are separate infrastructure components.
+SPEC_RU.md и v0.2.1 baseline сохраняют исторический контекст, а актуальный
+rules_registry.json и package data отражают реализованные v0.2.2 компоненты.

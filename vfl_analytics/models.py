@@ -56,6 +56,7 @@ class Player:
     played_minutes: float | None = None
     is_league_player: bool = False
     favorite_style_verified: bool = False  # Explicit independent evidence, never inferred from text.
+    specials_known: bool = True  # Adapter marks absent exports false; normalized callers can declare empty.
 
     @property
     def favorite_style_is_known(self) -> bool:
@@ -77,7 +78,7 @@ class Player:
             raise ValueError("Player needs id and name")
         validate_age(self.age)
         number(self.strength,'strength',positive=True)
-        for name,value,lo,hi in [('form',self.form,1,300),('fatigue',self.fatigue,0,100),
+        for name,value,lo,hi in [('form',self.form,75,125),('fatigue',self.fatigue,0,100),
                 ('real_strength',self.real_strength,0,None),('value',self.value,0,None),
                 ('salary_per_tour',self.salary_per_tour,0,None)]:
             if value is not None:
@@ -103,6 +104,8 @@ class Player:
             raise ValueError("is_league_player must be boolean")
         if not isinstance(self.favorite_style_verified, bool):
             raise ValueError("favorite_style_verified must be boolean")
+        if not isinstance(self.specials_known,bool):
+            raise ValueError('specials_known must be boolean')
         style = style_id(self.favorite_style)
         if style == "normal":
             raise ValueError("normal is not a player favorite style")

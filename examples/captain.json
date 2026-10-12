@@ -1,0 +1,11 @@
+{
+  "action": "captain",
+  "age": 16,
+  "ka_level": 4,
+  "captain_id": "cap",
+  "on_pitch_strengths": {
+    "cap": 100,
+    "other": 110
+  },
+  "strength_basis_verified": true
+}

@@ -1,4 +1,4 @@
-# Rule coverage v0.2.2 (checkpoint B)
+# Rule coverage v0.2.2
 
 | Component | Source/version | Implemented status | Limitation |
 |---|---|---|---|
@@ -17,6 +17,8 @@
 | Collision7x7 | page40/image | EXACT direction | Magnitude UNKNOWN |
 | Youth/veteran usefulness | page70 14.0 | Exact rational boundaries | Owner/minute semantics and availability supplied externally |
 | Full force combination | All of above | ESTIMATED/UNKNOWN | Full modifier order/bases not established |
+| Component PlayerEvaluation | Published sources above | Typed isolated components, UNKNOWN total | No arbitrary stacking |
+| Candidate comparison / transfer incumbent | Explicit model hypothesis | ESTIMATED known/conservative search, robust Pareto | Bounded search, no global nonlinear guarantee |
 
 Source rule versions are distinct from software version. Synthetic/reference
 tests do not validate hidden-generator behavior or actual exports.

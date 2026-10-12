@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.2 — 2026-10-12
+
+- Strict finite/type/ID/native-position/special-profile input validation.
+- Synthetic Assistant golden contracts, scoped statistics and duplicate identity joins;
+  absent study/special evidence stays unknown. Collector unchanged.
+- Unknown-style players remain eligible; explicit candidate proxies and retained
+  transfer incumbents, typed estimated marginal results.
+- Versioned/checksummed package tables: position suitability, qualitative colors,
+  all21 specialty catalogs/selectors, weather58464 logical cells.
+- Real-positional captain/Ka gate, separate И/Л donors, moment-helper max rule,
+  cohesion history and incomplete-history bounds.
+- PlayerEvaluation, separate bases/scopes, known/conservative/robust Pareto modes,
+  expanded offline CLI, two-version CI, schemas and deterministic benchmark.
+- No unpublished full-force order, calibration, real-export acceptance or ROI claim.
+
 ## 0.2.1 — 2026-10-12
 
 - AUD-01: exact rational half-up usefulness before youth/veteran thresholds.

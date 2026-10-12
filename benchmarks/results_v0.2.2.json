@@ -1,0 +1,10 @@
+{
+  "classification":"SYNTHETIC",
+  "python":"3.12.14","platform":"Windows",
+  "scope":"Local execution timing for synthetic rosters; no generator validation",
+  "cases":[
+    {"players":20,"plans":3,"styles":7,"repeats":3,"median_seconds":0.6232230002060533,"max_seconds":0.6512977001257241,"deterministic":true},
+    {"players":25,"plans":3,"styles":7,"repeats":3,"median_seconds":0.6501611997373402,"max_seconds":0.6535845999605954,"deterministic":true},
+    {"players":30,"plans":3,"styles":7,"repeats":3,"median_seconds":0.7069691000506282,"max_seconds":0.7076452001929283,"deterministic":true}
+  ]
+}

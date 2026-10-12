@@ -1,4 +1,4 @@
-"""Native displayed strength lookup, never a multiplier or reapplication stage."""
+"""Actual PLAYER favorite-style weather lookup, never chosen team style or reapplication."""
 from .models import style_id
 from .validation import number
 from .rule_data import _data

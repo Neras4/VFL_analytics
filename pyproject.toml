@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vfl-analytics-engine"
-version = "0.2.1"
+version = "0.2.2"
 description = "VFL rules-first, uncertainty-aware analytical research engine"
 requires-python = ">=3.11"
 dependencies = ["numpy==2.2.6", "scipy==1.15.3"]

@@ -1,0 +1,7 @@
+{
+  "action": "weather",
+  "player_style": "spartak",
+  "nominal_strength": 350,
+  "weather": "HOT",
+  "temperature_c": 29
+}
