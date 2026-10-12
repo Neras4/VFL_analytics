@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vfl-analytics-engine"
+version = "0.2.1"
+description = "VFL rules-first, uncertainty-aware analytical research engine"
+requires-python = ">=3.11"
+dependencies = ["numpy>=2.0,<3", "scipy>=1.12,<2"]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10"]
+
+[project.scripts]
+vfl-analyze = "vfl_analytics.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["vfl_analytics*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "rule_reference: direct published example or table lookup",
+  "synthetic: artificial arithmetic or regression scenario",
+  "observed: actual game data (none provided in this release)",
+]

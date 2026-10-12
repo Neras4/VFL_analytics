@@ -1,0 +1,382 @@
+{
+  "opponent": {
+    "as_of": "2026-10-10",
+    "matches_used": 6,
+    "effective_weighted_matches": 5.708,
+    "observed_counts": {
+      "normal": 0,
+      "bb": 3,
+      "british": 1,
+      "catenaccio": 0,
+      "spartak": 1,
+      "brazil": 0,
+      "tiki": 1
+    },
+    "posterior_alpha": {
+      "normal": 1.0,
+      "bb": 3.842943,
+      "british": 1.947516,
+      "catenaccio": 1.0,
+      "spartak": 1.954842,
+      "brazil": 1.0,
+      "tiki": 1.962224
+    },
+    "probabilities": {
+      "normal": 0.07869,
+      "bb": 0.30241,
+      "british": 0.15326,
+      "catenaccio": 0.07869,
+      "spartak": 0.15383,
+      "brazil": 0.07869,
+      "tiki": 0.15441
+    },
+    "interval90_approx": {
+      "normal": [
+        0.0044,
+        0.2258
+      ],
+      "bb": [
+        0.1174,
+        0.524
+      ],
+      "british": [
+        0.0294,
+        0.3401
+      ],
+      "catenaccio": [
+        0.0044,
+        0.2258
+      ],
+      "spartak": [
+        0.0296,
+        0.3409
+      ],
+      "brazil": [
+        0.0044,
+        0.2258
+      ],
+      "tiki": [
+        0.0299,
+        0.3417
+      ]
+    },
+    "method": "recency_weighted_dirichlet_generalized_posterior",
+    "status": "estimated_not_calibrated",
+    "limitations": [
+      "Uniform pseudocount prior; posterior is not a calibrated frequency guarantee",
+      "Home/strength similarity weights are research assumptions, not VFL rules",
+      "Missing tactical context (injuries, manager substitution, objectives) is not modeled"
+    ]
+  },
+  "lineups": {
+    "status": "partial_model",
+    "optimization": "exact_linear_assignment_plus_one_edge_exclusion_reranking; not guaranteed global nonlinear optimum",
+    "results": [
+      {
+        "style": "spartak",
+        "lineup": [
+          {
+            "slot": "GK",
+            "player_id": "0",
+            "name": "Synthetic player 0",
+            "partial_strength": 71.032
+          },
+          {
+            "slot": "LD",
+            "player_id": "1",
+            "name": "Synthetic player 1",
+            "partial_strength": 72.047
+          },
+          {
+            "slot": "CD1",
+            "player_id": "3",
+            "name": "Synthetic player 3",
+            "partial_strength": 74.077
+          },
+          {
+            "slot": "CD2",
+            "player_id": "2",
+            "name": "Synthetic player 2",
+            "partial_strength": 73.062
+          },
+          {
+            "slot": "RD",
+            "player_id": "4",
+            "name": "Synthetic player 4",
+            "partial_strength": 75.091
+          },
+          {
+            "slot": "LM",
+            "player_id": "5",
+            "name": "Synthetic player 5",
+            "partial_strength": 76.106
+          },
+          {
+            "slot": "DM",
+            "player_id": "6",
+            "name": "Synthetic player 6",
+            "partial_strength": 77.121
+          },
+          {
+            "slot": "CM",
+            "player_id": "7",
+            "name": "Synthetic player 7",
+            "partial_strength": 78.136
+          },
+          {
+            "slot": "RM",
+            "player_id": "8",
+            "name": "Synthetic player 8",
+            "partial_strength": 79.15
+          },
+          {
+            "slot": "AM",
+            "player_id": "9",
+            "name": "Synthetic player 9",
+            "partial_strength": 80.165
+          },
+          {
+            "slot": "CF",
+            "player_id": "11",
+            "name": "Synthetic player 11",
+            "partial_strength": 82.195
+          }
+        ],
+        "linear_strength": 838.183,
+        "included_chemistry_bonus": 0.0,
+        "included_age_captain_bonus": 16.439,
+        "captain_id": "11",
+        "partial_total": 854.622,
+        "warnings": [
+          "availability_unverified:0",
+          "availability_unverified:1",
+          "availability_unverified:10",
+          "availability_unverified:11",
+          "availability_unverified:2",
+          "availability_unverified:3",
+          "availability_unverified:4",
+          "availability_unverified:5",
+          "availability_unverified:6",
+          "availability_unverified:7",
+          "availability_unverified:8",
+          "availability_unverified:9",
+          "chemistry_links_not_provided",
+          "position_style_table_missing: position/style effects omitted"
+        ],
+        "slots": [
+          "GK",
+          "LD",
+          "CD1",
+          "CD2",
+          "RD",
+          "LM",
+          "DM",
+          "CM",
+          "RM",
+          "AM",
+          "CF"
+        ],
+        "variants_considered": 3
+      },
+      {
+        "style": "tiki",
+        "lineup": [
+          {
+            "slot": "GK",
+            "player_id": "0",
+            "name": "Synthetic player 0",
+            "partial_strength": 69.3
+          },
+          {
+            "slot": "LD",
+            "player_id": "1",
+            "name": "Synthetic player 1",
+            "partial_strength": 70.29
+          },
+          {
+            "slot": "CD1",
+            "player_id": "2",
+            "name": "Synthetic player 2",
+            "partial_strength": 71.28
+          },
+          {
+            "slot": "CD2",
+            "player_id": "3",
+            "name": "Synthetic player 3",
+            "partial_strength": 72.27
+          },
+          {
+            "slot": "RD",
+            "player_id": "4",
+            "name": "Synthetic player 4",
+            "partial_strength": 73.26
+          },
+          {
+            "slot": "LM",
+            "player_id": "5",
+            "name": "Synthetic player 5",
+            "partial_strength": 74.25
+          },
+          {
+            "slot": "DM",
+            "player_id": "6",
+            "name": "Synthetic player 6",
+            "partial_strength": 75.24
+          },
+          {
+            "slot": "CM",
+            "player_id": "7",
+            "name": "Synthetic player 7",
+            "partial_strength": 76.23
+          },
+          {
+            "slot": "RM",
+            "player_id": "8",
+            "name": "Synthetic player 8",
+            "partial_strength": 77.22
+          },
+          {
+            "slot": "AM",
+            "player_id": "9",
+            "name": "Synthetic player 9",
+            "partial_strength": 78.21
+          },
+          {
+            "slot": "CF",
+            "player_id": "11",
+            "name": "Synthetic player 11",
+            "partial_strength": 80.19
+          }
+        ],
+        "linear_strength": 817.74,
+        "included_chemistry_bonus": 0.0,
+        "included_age_captain_bonus": 16.038,
+        "captain_id": "11",
+        "partial_total": 833.778,
+        "warnings": [
+          "availability_unverified:0",
+          "availability_unverified:1",
+          "availability_unverified:10",
+          "availability_unverified:11",
+          "availability_unverified:2",
+          "availability_unverified:3",
+          "availability_unverified:4",
+          "availability_unverified:5",
+          "availability_unverified:6",
+          "availability_unverified:7",
+          "availability_unverified:8",
+          "availability_unverified:9",
+          "chemistry_links_not_provided",
+          "position_style_table_missing: position/style effects omitted"
+        ],
+        "slots": [
+          "GK",
+          "LD",
+          "CD1",
+          "CD2",
+          "RD",
+          "LM",
+          "DM",
+          "CM",
+          "RM",
+          "AM",
+          "CF"
+        ],
+        "variants_considered": 3
+      }
+    ],
+    "evaluated_style_formations": 2,
+    "invalid_combinations": [],
+    "not_modeled": [
+      "Position-style modifiers unless provided from verified source",
+      "Special ability effects, including Ka captain skill",
+      "Weather, home bonus, teamwork/synergy, attitude, match tactics",
+      "Match generator and win probabilities",
+      "Substitutions and future fatigue"
+    ],
+    "warning": "partial_total is NOT VFL generator's official real strength and cannot alone decide best match strategy"
+  },
+  "decision": {
+    "status": "abstain_collision_magnitude_unknown",
+    "recommendation": null,
+    "options": [
+      {
+        "style": "spartak",
+        "slots": [
+          "GK",
+          "LD",
+          "CD1",
+          "CD2",
+          "RD",
+          "LM",
+          "DM",
+          "CM",
+          "RM",
+          "AM",
+          "CF"
+        ],
+        "partial_base_strength": 854.622,
+        "collision_exposure": {
+          "p_win": 0.1533,
+          "p_loss": 0.3024
+        },
+        "expected_collision_direction": -0.1492,
+        "notes": [
+          "availability_unverified:0",
+          "availability_unverified:1",
+          "availability_unverified:10",
+          "availability_unverified:11",
+          "availability_unverified:2",
+          "availability_unverified:3",
+          "availability_unverified:4",
+          "availability_unverified:5",
+          "availability_unverified:6",
+          "availability_unverified:7",
+          "availability_unverified:8",
+          "availability_unverified:9",
+          "chemistry_links_not_provided",
+          "position_style_table_missing: position/style effects omitted"
+        ]
+      },
+      {
+        "style": "tiki",
+        "slots": [
+          "GK",
+          "LD",
+          "CD1",
+          "CD2",
+          "RD",
+          "LM",
+          "DM",
+          "CM",
+          "RM",
+          "AM",
+          "CF"
+        ],
+        "partial_base_strength": 833.778,
+        "collision_exposure": {
+          "p_win": 0.0787,
+          "p_loss": 0.1533
+        },
+        "expected_collision_direction": -0.0746,
+        "notes": [
+          "availability_unverified:0",
+          "availability_unverified:1",
+          "availability_unverified:10",
+          "availability_unverified:11",
+          "availability_unverified:2",
+          "availability_unverified:3",
+          "availability_unverified:4",
+          "availability_unverified:5",
+          "availability_unverified:6",
+          "availability_unverified:7",
+          "availability_unverified:8",
+          "availability_unverified:9",
+          "chemistry_links_not_provided",
+          "position_style_table_missing: position/style effects omitted"
+        ]
+      }
+    ],
+    "note": "No winner: relative position-style factors and actual collision bonus are not modeled. Do not rank on a made-up value."
+  }
+}

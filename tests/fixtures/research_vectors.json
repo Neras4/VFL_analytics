@@ -1,0 +1,358 @@
+{
+  "schema_version": "selected-v1",
+  "tests": [
+    {
+      "id": "match:chem-directed",
+      "mechanic": "MATCH.CHEMISTRY_LINE",
+      "classification": "SYNTHETIC",
+      "input": {
+        "same_style": true,
+        "same_nationality": false,
+        "neighbor_studied_pct": 20,
+        "recipient_studied_pct": 100
+      },
+      "expected": {
+        "neighbor_to_recipient_pct": 2.5,
+        "recipient_to_neighbor_pct": 12.5
+      },
+      "scope": "isolated published component, not complete match generator",
+      "inputs": {
+        "same_style": true,
+        "same_nationality": false,
+        "neighbor_studied_pct": 20,
+        "recipient_studied_pct": 100
+      },
+      "mechanic_ids": [
+        "MATCH.CHEMISTRY_LINE"
+      ],
+      "mechanic_id": "MATCH.CHEMISTRY_LINE",
+      "source_block": "match_test_vectors.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "match:chem-floor",
+      "mechanic": "MATCH.CHEMISTRY_LINE",
+      "classification": "SYNTHETIC",
+      "input": {
+        "same_nationality": true,
+        "styles_collide": true
+      },
+      "expected": 5,
+      "scope": "isolated published component, not complete match generator",
+      "inputs": {
+        "same_nationality": true,
+        "styles_collide": true
+      },
+      "mechanic_ids": [
+        "MATCH.CHEMISTRY_LINE"
+      ],
+      "mechanic_id": "MATCH.CHEMISTRY_LINE",
+      "source_block": "match_test_vectors.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "match:chem-empty",
+      "mechanic": "MATCH.CHEMISTRY_PLAYER",
+      "classification": "SYNTHETIC",
+      "input": {
+        "line_pct": [
+          12.5,
+          0
+        ],
+        "empty_line_stays": true
+      },
+      "expected": 6.25,
+      "scope": "isolated published component, not complete match generator",
+      "inputs": {
+        "line_pct": [
+          12.5,
+          0
+        ],
+        "empty_line_stays": true
+      },
+      "mechanic_ids": [
+        "MATCH.CHEMISTRY_PLAYER"
+      ],
+      "mechanic_id": "MATCH.CHEMISTRY_PLAYER",
+      "source_block": "match_test_vectors.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "match:chem-unknown",
+      "mechanic": "MATCH.CHEMISTRY_LINE",
+      "classification": "SYNTHETIC",
+      "input": {
+        "different_nationality": true,
+        "neighbor_actual_style": null,
+        "neighbor_studied_pct": 0
+      },
+      "expected": {
+        "point": null,
+        "possible_pct": [
+          -5,
+          0
+        ]
+      },
+      "scope": "isolated published component, not complete match generator",
+      "inputs": {
+        "different_nationality": true,
+        "neighbor_actual_style": null,
+        "neighbor_studied_pct": 0
+      },
+      "mechanic_ids": [
+        "MATCH.CHEMISTRY_LINE"
+      ],
+      "mechanic_id": "MATCH.CHEMISTRY_LINE",
+      "source_block": "match_test_vectors.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "match:chem-max",
+      "mechanic": "MATCH.CHEMISTRY_LINE",
+      "classification": "SYNTHETIC",
+      "input": {
+        "same_style": true,
+        "neighbor_studied_pct": 100
+      },
+      "expected": 12.5,
+      "scope": "isolated published component, not complete match generator",
+      "inputs": {
+        "same_style": true,
+        "neighbor_studied_pct": 100
+      },
+      "mechanic_ids": [
+        "MATCH.CHEMISTRY_LINE"
+      ],
+      "mechanic_id": "MATCH.CHEMISTRY_LINE",
+      "source_block": "match_test_vectors.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "match:chem-min",
+      "mechanic": "MATCH.CHEMISTRY_LINE",
+      "classification": "SYNTHETIC",
+      "input": {
+        "styles_collide": true,
+        "same_nationality": false
+      },
+      "expected": -5,
+      "scope": "isolated published component, not complete match generator",
+      "inputs": {
+        "styles_collide": true,
+        "same_nationality": false
+      },
+      "mechanic_ids": [
+        "MATCH.CHEMISTRY_LINE"
+      ],
+      "mechanic_id": "MATCH.CHEMISTRY_LINE",
+      "source_block": "match_test_vectors.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "match:captain-34",
+      "mechanic": "MATCH.CAPTAIN_AGE",
+      "classification": "SYNTHETIC",
+      "input": {
+        "age": 34,
+        "captain_strength": 150,
+        "on_pitch_mean": 140,
+        "has_Ka": false
+      },
+      "expected": {
+        "each_other_add_points": 12,
+        "captain_add": 0
+      },
+      "scope": "isolated published component, not complete match generator",
+      "inputs": {
+        "age": 34,
+        "captain_strength": 150,
+        "on_pitch_mean": 140,
+        "has_Ka": false
+      },
+      "mechanic_ids": [
+        "MATCH.CAPTAIN_AGE"
+      ],
+      "mechanic_id": "MATCH.CAPTAIN_AGE",
+      "source_block": "match_test_vectors.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "match:captain-gate-equal",
+      "mechanic": "MATCH.CAPTAIN_AGE",
+      "classification": "SYNTHETIC",
+      "input": {
+        "age": 30,
+        "captain_strength": 100,
+        "on_pitch_mean": 100,
+        "has_Ka": false
+      },
+      "expected": {
+        "each_other_add_points": 4
+      },
+      "scope": "isolated published component, not complete match generator",
+      "inputs": {
+        "age": 30,
+        "captain_strength": 100,
+        "on_pitch_mean": 100,
+        "has_Ka": false
+      },
+      "mechanic_ids": [
+        "MATCH.CAPTAIN_AGE"
+      ],
+      "mechanic_id": "MATCH.CAPTAIN_AGE",
+      "source_block": "match_test_vectors.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "match:captain-gate-below",
+      "mechanic": "MATCH.CAPTAIN_AGE",
+      "classification": "SYNTHETIC",
+      "input": {
+        "age": 34,
+        "captain_strength": 99,
+        "on_pitch_mean": 100,
+        "has_Ka": false
+      },
+      "expected": {
+        "each_other_add_points": 0
+      },
+      "scope": "isolated published component, not complete match generator",
+      "inputs": {
+        "age": 34,
+        "captain_strength": 99,
+        "on_pitch_mean": 100,
+        "has_Ka": false
+      },
+      "mechanic_ids": [
+        "MATCH.CAPTAIN_AGE"
+      ],
+      "mechanic_id": "MATCH.CAPTAIN_AGE",
+      "source_block": "match_test_vectors.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "match:captain-young",
+      "mechanic": "MATCH.CAPTAIN_AGE",
+      "classification": "SYNTHETIC",
+      "input": {
+        "age": 16,
+        "captain_strength": 200,
+        "other_strength": 100,
+        "has_Ka": false
+      },
+      "expected": {
+        "other_component_after": 92,
+        "captain_penalty": 0
+      },
+      "scope": "isolated published component, not complete match generator",
+      "inputs": {
+        "age": 16,
+        "captain_strength": 200,
+        "other_strength": 100,
+        "has_Ka": false
+      },
+      "mechanic_ids": [
+        "MATCH.CAPTAIN_AGE"
+      ],
+      "mechanic_id": "MATCH.CAPTAIN_AGE",
+      "source_block": "match_test_vectors.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "development:DEV.USEFULNESS.HALF",
+      "classification": "SYNTHETIC",
+      "inputs": {
+        "player_minutes": 109,
+        "team_minutes": 200
+      },
+      "expected": {
+        "percent": 55,
+        "veteran_useful": true
+      },
+      "note": "54.5 rounds half up; do not use language bankers rounding.",
+      "mechanic_ids": [
+        "DEV.USEFULNESS"
+      ],
+      "mechanic_id": "DEV.USEFULNESS",
+      "source_block": "development_tests.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "development:DEV.USEFULNESS.ZERO",
+      "classification": "SYNTHETIC",
+      "inputs": {
+        "player_minutes": 0,
+        "team_minutes": 0
+      },
+      "expected": {
+        "value": null,
+        "reason": "zero denominator"
+      },
+      "note": "",
+      "mechanic_ids": [
+        "DEV.USEFULNESS"
+      ],
+      "mechanic_id": "DEV.USEFULNESS",
+      "source_block": "development_tests.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "development:DEV.USEFULNESS.UNKNOWN",
+      "classification": "SYNTHETIC",
+      "inputs": {
+        "player_minutes": null,
+        "team_minutes": 900
+      },
+      "expected": {
+        "value": null,
+        "reason": "missing numerator"
+      },
+      "note": "",
+      "mechanic_ids": [
+        "DEV.USEFULNESS"
+      ],
+      "mechanic_id": "DEV.USEFULNESS",
+      "source_block": "development_tests.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "development:DEV.USEFULNESS.OVER100",
+      "classification": "SYNTHETIC",
+      "inputs": {
+        "player_minutes": 920,
+        "team_minutes": 900
+      },
+      "expected": {
+        "percent": 102
+      },
+      "note": "No published percentage cap; added time and other-team minutes can exceed denominator.",
+      "mechanic_ids": [
+        "DEV.USEFULNESS"
+      ],
+      "mechanic_id": "DEV.USEFULNESS",
+      "source_block": "development_tests.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    },
+    {
+      "id": "development:DEV.YOUTH.MINUTES.ROUND",
+      "classification": "SYNTHETIC",
+      "inputs": {
+        "age": 16,
+        "target_growth": 10,
+        "final_team_minutes": 4500,
+        "current_minutes": 800
+      },
+      "expected": {
+        "required_player_minutes": 878,
+        "missing_minutes": 78
+      },
+      "note": "Threshold20%; raw19.5%=877.5 → ceil878 minutes.",
+      "mechanic_ids": [
+        "DEV.YOUTH.MINUTES"
+      ],
+      "mechanic_id": "DEV.YOUTH.MINUTES",
+      "source_block": "development_tests.json",
+      "execution_status": "SPECIFICATION_VECTOR; see validation_report.md for executed subset"
+    }
+  ]
+}
