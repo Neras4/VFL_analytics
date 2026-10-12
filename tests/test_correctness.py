@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+from dataclasses import replace
 import pytest
 from vfl_analytics.arithmetic import round_usefulness
 from vfl_analytics.models import Player, StyleKnowledge, PositionPlan
@@ -207,9 +208,8 @@ def test_style_uncertainty_not_imputed_into_strength():
 
 @pytest.mark.synthetic
 def test_lineup_transfer_decision_abstain_on_bounds():
-    # All styles verified. Absent nationalities make colliding-line nationality unknown.
-    ps=roster()
-    ps[1]=player(id="1",positions=("LD",),nationality=None,favorite_style="bb")
+    # Unknown styles stay eligible; uncertainty must survive candidate reranking.
+    ps=[replace(p,favorite_style=None,style_known_percent=None) for p in roster()]
     plan=PositionPlan(SLOTS,links=(("LD","CD1"),))
     out=optimize_lineups(ps,[plan],styles=["spartak"])
     ans=out["results"][0]

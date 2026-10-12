@@ -7,31 +7,25 @@ from dataclasses import dataclass
 from .models import Player, style_id
 from .arithmetic import round_usefulness, validate_age
 from .results import CalculationResult, ResultStatus, exact, bounded
+from .validation import number
+from .rule_data import _data
 
 MATCH_SOURCE = "https://vfliga.com/rules.php?page=40 §2.10–2.12, version 19.2"
 
 # Winner -> style beaten. Exact directed cycle from section 2.11.
-COLLISION_WINS = {
-    "bb": "spartak", "spartak": "british", "british": "tiki",
-    "tiki": "catenaccio", "catenaccio": "brazil", "brazil": "bb"
-}
-STYLE_KNOWN_BONUS = {0: 0.0, 20: .005, 40: .01, 60: .015, 80: .02, 100: .025}
-YOUTH_THRESHOLDS = {
-    16: (2,4,6,8,10,12,14,16,18,20),
-    17: (4,7,10,13,16,19,22,25,28),
-    18: (7,11,15,19,23,28,33,38),
-    19: (11,16,21,26,32,38,44),
-    20: (16,22,28,34,41,48),
-    21: (22,29,36,44,52),
-    22: (29,37,46,55),
-    23: (37,47,57),
-}
-VETERAN_AGING_PERCENT = {30: 5, 31: 10, 32: 15, 33: 20}
+_CORE=_data('core.json')
+_STYLES=('normal','bb','british','catenaccio','spartak','brazil','tiki')
+COLLISION_WINS={_STYLES[i]:_STYLES[row.index(1)] for i,row in enumerate(_CORE['collision_outcomes']['cells']) if 1 in row}
+STYLE_KNOWN_BONUS={int(k):v/100 for k,v in _CORE['style_study_match_bonus_pct'].items()}
+YOUTH_THRESHOLDS={int(k):tuple(v) for k,v in _CORE['youth_growth_threshold_percent_by_age'].items()}
+VETERAN_AGING_PERCENT={int(k):int(v*100) for k,v in _CORE['veteran_loss_fraction_by_age'].items()}
 
 
 def collision(our_style: str, their_style: str) -> int:
     """+1 our win, -1 their win, 0 no collision. No invented size."""
     a, b = style_id(our_style), style_id(their_style)
+    if a is None or b is None:
+        raise ValueError('Both collision styles must be provided')
     if COLLISION_WINS.get(a) == b:
         return 1
     if COLLISION_WINS.get(b) == a:
@@ -42,6 +36,8 @@ def collision(our_style: str, their_style: str) -> int:
 def style_effect(p: Player, style: str) -> CalculationResult:
     """Incomplete study labels do not confirm an actual favorite style."""
     s = style_id(style)
+    if s is None:
+        raise ValueError('Chosen team style required')
     if s == "normal" or p.is_league_player:
         return exact(1., source=MATCH_SOURCE)
     if not p.favorite_style_is_known:
@@ -63,6 +59,7 @@ def baseline_strength(p: Player, our_style: str, pos_factor: float = 1.0) -> tup
     Provisional multiplicative combination for form/fatigue/known style.
     """
     missing = []
+    number(pos_factor,'position factor',positive=True)
     if p.fatigue is None:
         missing.append("fatigue")
     if p.form is None:
@@ -76,15 +73,27 @@ def baseline_strength(p: Player, our_style: str, pos_factor: float = 1.0) -> tup
     return p.strength * p.form / 100 * (1 - p.fatigue / 100) * effect.value * pos_factor, missing
 
 
+def partial_strength_range(p: Player, our_style: str, pos_factor: float = 1.):
+    """Range conditional on the legacy provisional product, never generator force."""
+    number(pos_factor,'position factor',positive=True)
+    if p.form is None or p.fatigue is None:
+        from .results import unknown
+        return unknown(unit='partial_strength_units',source=MATCH_SOURCE,reason='Form/fatigue missing')
+    base=p.strength*p.form/100*(1-p.fatigue/100)*pos_factor
+    effect=style_effect(p,our_style)
+    if effect.status==ResultStatus.EXACT:
+        return CalculationResult(ResultStatus.ESTIMATED,value=base*effect.value,
+            unit='partial_strength_units',source=MATCH_SOURCE,reason='Provisional component product; published combination order unresolved')
+    return bounded(base*effect.lower,base*effect.upper,unit='partial_strength_units',source=MATCH_SOURCE,
+                   reason='Bounds conditional on provisional product, not full match force')
+
+
 def captain_age_factor(age: int) -> float:
     """Rule 2.8 (without special Ка). Positive = fraction of captain force per other player.
     Negative = own force penalty fraction per other player.
     """
-    validate_age(age)
-    if age == 34: return .08
-    if age >= 26: return (max(1, age - 26)) * .01 if age <= 33 else .08
-    if age >= 24: return 0.0
-    return -(24 - age) * .01
+    from .abilities import captain_coefficient
+    return captain_coefficient(age,0).value
 
 
 def captain_bonus(captain: Player, strengths: dict[str, float]) -> float:
@@ -93,6 +102,8 @@ def captain_bonus(captain: Player, strengths: dict[str, float]) -> float:
     """
     if captain.id not in strengths or len(strengths) < 2:
         raise ValueError("captain not in lineup")
+    for value in strengths.values():
+        number(value,'captain force base',minimum=0)
     if any(s.lower().startswith("ка") for s in captain.specials):
         raise ValueError("Ka special effect not implemented; do not apply age-only captain model")
     coeff = captain_age_factor(captain.age)
@@ -142,6 +153,7 @@ def chemistry_for_player(receiver: Player | None, neighbours: list[Player | None
 def defense_choice(opponent_attack_count: int | None) -> str | None:
     if opponent_attack_count is None:
         return None
+    number(opponent_attack_count,'opponent_attack_count',minimum=0,integer=True)
     return "zonal" if opponent_attack_count > 3 else "personal"
 
 

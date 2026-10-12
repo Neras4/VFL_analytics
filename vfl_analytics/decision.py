@@ -6,6 +6,7 @@ from __future__ import annotations
 import numpy as np
 from .models import STYLE_NAMES
 from .rules import collision
+from .validation import number
 
 
 def compare_styles(lineups: list[dict], style_prediction: dict,
@@ -16,10 +17,12 @@ def compare_styles(lineups: list[dict], style_prediction: dict,
     +/- additive effect on score (NOT %). Null => report exposure, abstain.
     With risk_weight > 0 the proxy score is posterior mean - risk_weight*SD.
     """
-    if risk_weight < 0 or samples < 100:
-        raise ValueError("risk_weight >= 0 and samples >= 100 required")
-    if collision_swing is not None and collision_swing < 0:
-        raise ValueError("collision_swing must be >= 0")
+    number(risk_weight,'risk_weight',minimum=0)
+    number(samples,'samples',minimum=100,maximum=100000,integer=True)
+    number(seed,'seed',minimum=0,integer=True)
+    samples=int(samples); seed=int(seed)
+    if collision_swing is not None:
+        number(collision_swing,'collision_swing',minimum=0)
     if not lineups:
         return {"status":"no_lineups","options":[],"recommendation":None}
     if any(x.get("partial_total") is None for x in lineups):

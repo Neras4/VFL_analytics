@@ -1,0 +1,29 @@
+{
+  "action": "evaluate_player",
+  "player": {
+    "id": "synthetic",
+    "name": "Synthetic midfielder",
+    "positions": [
+      "CD",
+      "CM"
+    ],
+    "age": 30,
+    "strength": 350,
+    "fatigue": 10,
+    "form": 112,
+    "favorite_style": null,
+    "style_known_percent": null,
+    "specials": [
+      "Пк4",
+      "Ат4"
+    ]
+  },
+  "slot": "DM",
+  "team_style": "spartak",
+  "context": {
+    "weather": {
+      "weather": "HOT",
+      "temperature_c": 29
+    }
+  }
+}

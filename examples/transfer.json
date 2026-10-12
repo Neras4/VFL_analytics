@@ -83,7 +83,8 @@
       "id": "6",
       "name": "Synthetic player 6",
       "positions": [
-        "DM"
+        "CD",
+        "CM"
       ],
       "age": 28,
       "strength": 76,
@@ -122,7 +123,8 @@
       "id": "9",
       "name": "Synthetic player 9",
       "positions": [
-        "AM"
+        "CM",
+        "CF"
       ],
       "age": 28,
       "strength": 79,
@@ -185,7 +187,11 @@
         "RM",
         "AM",
         "CF"
-      ]
+      ],
+      "tactical_permissions": {
+        "DM": true,
+        "AM": true
+      }
     }
   ],
   "styles": [

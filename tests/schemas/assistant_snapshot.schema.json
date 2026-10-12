@@ -1,0 +1,14 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "type":"object","required":["classification","roster"],
+  "properties":{
+    "classification":{"const":"SYNTHETIC"},
+    "roster":{"type":"object","required":["players"],"properties":{
+      "players":{"type":"array","items":{"type":"object","required":["id","name","age","position","strength"],
+        "properties":{"id":{"type":"string","pattern":"^[0-9]+$"},"name":{"type":"string"},
+          "age":{"type":"integer","minimum":16,"maximum":34},"position":{"type":"string"},
+          "strength":{"type":"number","exclusiveMinimum":0},"form":{"type":["number","null"]},
+          "fatigue":{"type":["number","null"]},"specials":{"type":"array","items":{"type":"string"}}}}}}},
+    "playerDetails":{"type":"array","items":{"type":"object","required":["playerId"]}}
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "classification": "SYNTHETIC",
+  "kind": "vfl-own-team-context",
+  "depth": "deep",
+  "roster":{"players":[{"id":"101","name":"Synthetic A","country":"JP",
+    "position":"CM","age":28,"strength":100,"fatigue":7,"form":112,
+    "realStrength":104,"specials":["Ка4"],"selectedStats":{"games":3}}]},
+  "playerDetails":[{"playerId":101,"form":80,"fatigue":50,"realStrength":60,
+    "info":{"playerId":"101","style":"спартаковский","form":80,"fatigue":50,
+      "seasonMinutes":109,"recentMatches":[]},
+    "stats":{"playerId":"101","seasonMinutes":109},
+    "contract":{"playerId":"101","current":{"salaryPerTour":1200}}}]
+}

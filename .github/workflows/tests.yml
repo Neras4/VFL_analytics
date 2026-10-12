@@ -1,0 +1,24 @@
+name: Core and rule validation
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: python -m pip install -c requirements-lock.txt -e '.[test]'
+      - run: python -m pytest -q -p no:cacheprovider
+      - run: python -m vfl_analytics.rule_data
+      - run: python benchmarks/optimizer.py
+      - run: python -m vfl_analytics.cli examples/usefulness.json

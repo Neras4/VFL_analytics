@@ -1,0 +1,13 @@
+{
+  "classification": "SYNTHETIC",
+  "kind": "vfl-own-team-context",
+  "depth": "normal",
+  "roster": {"selectedStatsScope":{"sort":301,"label":"чемпионат","season":79},
+    "players":[{"id":"101","name":"Synthetic A","country":"JP","position":"CD/CM",
+      "age":28,"strength":100,"fatigue":null,"form":null,"realStrength":null,
+      "formTrend":null,"specials":["Пк4","Ат4"],
+      "selectedStats":{"games":5,"goals":1,"scope":{"sort":301}}}]},
+  "rosterSeasonStats":{"scope":{"sort":300,"label":"по всем турнирам","season":79},
+    "players":[{"playerId":"101","games":11,"goals":2}]},
+  "recentMatches":[]
+}

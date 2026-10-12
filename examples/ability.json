@@ -1,0 +1,11 @@
+{
+  "action": "ability",
+  "code": "Пк",
+  "level": 4,
+  "context": {
+    "team_style": "spartak",
+    "native_positions": [
+      "CM"
+    ]
+  }
+}

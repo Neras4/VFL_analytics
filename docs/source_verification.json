@@ -1,0 +1,133 @@
+{
+  "ability_verification": [
+    {
+      "code": "Ск",
+      "published_numeric_cells_verified": 20,
+      "source": "https://vfliga.com/rules.php?page=64#p124",
+      "status": "PASS"
+    },
+    {
+      "code": "Г",
+      "published_numeric_cells_verified": 20,
+      "source": "https://vfliga.com/rules.php?page=64#p126",
+      "status": "PASS"
+    },
+    {
+      "code": "Пд",
+      "published_numeric_cells_verified": 20,
+      "source": "https://vfliga.com/rules.php?page=64#p125",
+      "status": "PASS"
+    },
+    {
+      "code": "Пк",
+      "published_numeric_cells_verified": 20,
+      "source": "https://vfliga.com/rules.php?page=64#p122",
+      "status": "PASS"
+    },
+    {
+      "code": "Д",
+      "published_numeric_cells_verified": 20,
+      "source": "https://vfliga.com/rules.php?page=64#p123",
+      "status": "PASS"
+    },
+    {
+      "code": "Км",
+      "published_numeric_cells_verified": 20,
+      "source": "https://vfliga.com/rules.php?page=64#p121",
+      "status": "PASS"
+    },
+    {
+      "code": "Ка",
+      "published_numeric_cells_verified": 95,
+      "source": "https://vfliga.com/rules.php?page=64#p1219",
+      "status": "PASS"
+    },
+    {
+      "code": "И",
+      "published_numeric_cells_verified": 4,
+      "source": "https://vfliga.com/rules.php?page=64#p127",
+      "status": "PASS"
+    },
+    {
+      "code": "К",
+      "published_numeric_cells_verified": 8,
+      "source": "https://vfliga.com/rules.php?page=64#p128",
+      "status": "PASS"
+    },
+    {
+      "code": "Ат",
+      "published_numeric_cells_verified": 12,
+      "source": "https://vfliga.com/rules.php?page=64#p129",
+      "status": "PASS"
+    },
+    {
+      "code": "См",
+      "published_numeric_cells_verified": 8,
+      "source": "https://vfliga.com/rules.php?page=64#p1210",
+      "status": "PASS"
+    },
+    {
+      "code": "Шт",
+      "published_numeric_cells_verified": 8,
+      "source": "https://vfliga.com/rules.php?page=64#p1211",
+      "status": "PASS"
+    },
+    {
+      "code": "Уг",
+      "published_numeric_cells_verified": 8,
+      "source": "https://vfliga.com/rules.php?page=64#p1212",
+      "status": "PASS"
+    },
+    {
+      "code": "Тр",
+      "published_numeric_cells_verified": 70,
+      "source": "https://vfliga.com/rules.php?page=64#p1220",
+      "status": "PASS"
+    },
+    {
+      "code": "Л",
+      "published_numeric_cells_verified": 4,
+      "source": "https://vfliga.com/rules.php?page=64#p1221",
+      "status": "PASS"
+    },
+    {
+      "code": "П",
+      "published_numeric_cells_verified": 12,
+      "source": "https://vfliga.com/rules.php?page=64#p1213",
+      "status": "PASS"
+    },
+    {
+      "code": "Р",
+      "published_numeric_cells_verified": 8,
+      "source": "https://vfliga.com/rules.php?page=64#p1214",
+      "status": "PASS"
+    },
+    {
+      "code": "В",
+      "published_numeric_cells_verified": 8,
+      "source": "https://vfliga.com/rules.php?page=64#p1215",
+      "status": "PASS"
+    },
+    {
+      "code": "От",
+      "published_numeric_cells_verified": 8,
+      "source": "https://vfliga.com/rules.php?page=64#p1216",
+      "status": "PASS"
+    },
+    {
+      "code": "Оп",
+      "published_numeric_cells_verified": 8,
+      "source": "https://vfliga.com/rules.php?page=64#p1217",
+      "status": "PASS"
+    },
+    {
+      "code": "У",
+      "published_numeric_cells_verified": 4,
+      "source": "https://vfliga.com/rules.php?page=64#p1218",
+      "status": "PASS"
+    }
+  ],
+  "source_version": "page64 14.0 (2024-06-23)",
+  "retrieval": "2026-10-12",
+  "scope": "Source table cells; full effect/stacking order remains partial"
+}
