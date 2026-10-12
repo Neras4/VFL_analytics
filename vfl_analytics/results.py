@@ -2,6 +2,7 @@
 from dataclasses import asdict, dataclass
 from enum import Enum
 from math import isfinite
+from .validation import number
 
 
 class ResultStatus(str, Enum):
@@ -24,9 +25,9 @@ class CalculationResult:
 
     def __post_init__(self):
         object.__setattr__(self, "status", ResultStatus(self.status))
-        for number in (self.value, self.lower, self.upper):
-            if number is not None and (isinstance(number, bool) or not isfinite(number)):
-                raise ValueError("Result numbers must be finite")
+        for value in (self.value, self.lower, self.upper):
+            if value is not None:
+                number(value,'result')
         if self.status in (ResultStatus.EXACT, ResultStatus.ESTIMATED):
             if self.value is None or self.lower is not None or self.upper is not None:
                 raise ValueError("Point results require only value")

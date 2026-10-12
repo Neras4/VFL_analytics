@@ -24,7 +24,7 @@ def make_players(rows):
 
 def plans_from(rows):
     return [PositionPlan(tuple(x["slots"]),x.get("style_position_multipliers",{}),
-                         tuple(tuple(y) for y in x.get("links",[]))) for x in rows]
+                         tuple(tuple(y) for y in x.get("links",[])),x.get('defense_formation')) for x in rows]
 
 
 def run_request(obj:dict)->dict:
@@ -38,7 +38,7 @@ def run_request(obj:dict)->dict:
         return {"prediction":dist,"collision_exposure":collision_exposure(dist["probabilities"])}
     if op=="lineup":
         return optimize_lineups(make_players(obj["players"]),plans_from(obj["plans"]),
-                                styles=obj.get("styles"),top_n=obj.get("top_n",3))
+                                styles=obj.get("styles"),top_n=obj.get("top_n",3),mode=obj.get('mode','known_components'))
     if op=="strategy":
         pred=predict_styles([MatchObservation(**x) for x in obj["history"]],
             as_of=obj["as_of"],home=obj.get("home"),strength_ratio=obj.get("strength_ratio"))

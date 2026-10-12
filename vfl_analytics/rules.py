@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from .models import Player, style_id
 from .arithmetic import round_usefulness, validate_age
 from .results import CalculationResult, ResultStatus, exact, bounded
+from .validation import number
 
 MATCH_SOURCE = "https://vfliga.com/rules.php?page=40 §2.10–2.12, version 19.2"
 
@@ -63,6 +64,7 @@ def baseline_strength(p: Player, our_style: str, pos_factor: float = 1.0) -> tup
     Provisional multiplicative combination for form/fatigue/known style.
     """
     missing = []
+    number(pos_factor,'position factor',positive=True)
     if p.fatigue is None:
         missing.append("fatigue")
     if p.form is None:
@@ -74,6 +76,21 @@ def baseline_strength(p: Player, our_style: str, pos_factor: float = 1.0) -> tup
         missing.append("favorite_style_not_fully_known")
         return None, missing
     return p.strength * p.form / 100 * (1 - p.fatigue / 100) * effect.value * pos_factor, missing
+
+
+def partial_strength_range(p: Player, our_style: str, pos_factor: float = 1.):
+    """Range conditional on the legacy provisional product, never generator force."""
+    number(pos_factor,'position factor',positive=True)
+    if p.form is None or p.fatigue is None:
+        from .results import unknown
+        return unknown(unit='partial_strength_units',source=MATCH_SOURCE,reason='Form/fatigue missing')
+    base=p.strength*p.form/100*(1-p.fatigue/100)*pos_factor
+    effect=style_effect(p,our_style)
+    if effect.status==ResultStatus.EXACT:
+        return CalculationResult(ResultStatus.ESTIMATED,value=base*effect.value,
+            unit='partial_strength_units',source=MATCH_SOURCE,reason='Provisional component product; published combination order unresolved')
+    return bounded(base*effect.lower,base*effect.upper,unit='partial_strength_units',source=MATCH_SOURCE,
+                   reason='Bounds conditional on provisional product, not full match force')
 
 
 def captain_age_factor(age: int) -> float:
@@ -93,6 +110,8 @@ def captain_bonus(captain: Player, strengths: dict[str, float]) -> float:
     """
     if captain.id not in strengths or len(strengths) < 2:
         raise ValueError("captain not in lineup")
+    for value in strengths.values():
+        number(value,'captain force base',minimum=0)
     if any(s.lower().startswith("ка") for s in captain.specials):
         raise ValueError("Ka special effect not implemented; do not apply age-only captain model")
     coeff = captain_age_factor(captain.age)
@@ -142,6 +161,7 @@ def chemistry_for_player(receiver: Player | None, neighbours: list[Player | None
 def defense_choice(opponent_attack_count: int | None) -> str | None:
     if opponent_attack_count is None:
         return None
+    number(opponent_attack_count,'opponent_attack_count',minimum=0,integer=True)
     return "zonal" if opponent_attack_count > 3 else "personal"
 
 

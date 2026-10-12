@@ -8,13 +8,18 @@ from math import exp, log
 from scipy.stats import beta
 from .models import STYLE_NAMES, MatchObservation
 from .rules import collision
+from .validation import number
 
 
 def predict_styles(history: list[MatchObservation], *, as_of: str,
                    home: bool | None = None, strength_ratio: float | None = None,
                    half_life_days: float = 90, prior_strength: float = 7) -> dict:
-    if half_life_days <= 0 or prior_strength <= 0:
-        raise ValueError("positive half life/prior required")
+    number(half_life_days,'half_life_days',positive=True)
+    number(prior_strength,'prior_strength',positive=True)
+    if strength_ratio is not None:
+        number(strength_ratio,'strength_ratio',positive=True)
+    if home is not None and not isinstance(home,bool):
+        raise ValueError('home must be boolean or null')
     target = date.fromisoformat(as_of)
     categories = STYLE_NAMES
     alpha = {s: prior_strength/len(categories) for s in categories}

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools==80.9.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,10 +7,10 @@ name = "vfl-analytics-engine"
 version = "0.2.1"
 description = "VFL rules-first, uncertainty-aware analytical research engine"
 requires-python = ">=3.11"
-dependencies = ["numpy>=2.0,<3", "scipy>=1.12,<2"]
+dependencies = ["numpy==2.2.6", "scipy==1.15.3"]
 
 [project.optional-dependencies]
-test = ["pytest>=8,<10"]
+test = ["pytest==8.4.2", "jsonschema==4.25.1"]
 
 [project.scripts]
 vfl-analyze = "vfl_analytics.cli:main"

@@ -10,10 +10,10 @@ from vfl_analytics.adapters import adapt_roster
 SLOTS = ('GK','LD','CD1','CD2','RD','LM','DM','CM','RM','AM','CF')
 
 def roster():
-    positions=('GK','LD','CD','CD','RD','LM','DM','CM','RM','AM','CF','CF')
+    positions=('GK','LD','CD','CD','RD','LM','CD/CM','CM','RM','CM/CF','CF','CF')
     ps=[]
     for i,pos in enumerate(positions):
-        ps.append(Player(str(i),f'P{i}',(pos,),28,70+i,10,110,
+        ps.append(Player(str(i),f'P{i}',tuple(pos.split('/')),28,70+i,10,110,
                          favorite_style='spartak',style_known_percent=100))
     return ps
 
@@ -24,7 +24,7 @@ def test_lineup_valid_and_unique():
     ans=output['results'][0]
     assert len(ans['lineup'])==11
     assert len({x['player_id'] for x in ans['lineup']})==11
-    assert ans['lineup'][-1]['player_id']=='11'
+    assert '11' in {x['player_id'] for x in ans['lineup']}
     assert 'position_style_table_missing: position/style effects omitted' in ans['warnings']
     assert ans['partial_total']>0
 

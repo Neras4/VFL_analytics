@@ -1,0 +1,13 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "type":"object","additionalProperties":false,
+  "required":["status","value","lower","upper","unit","source","reason"],
+  "properties":{"status":{"enum":["EXACT","BOUNDED","ESTIMATED","UNKNOWN","NOT_APPLICABLE"]},
+    "value":{"type":["number","null"]},"lower":{"type":["number","null"]},"upper":{"type":["number","null"]},
+    "unit":{"type":"string"},"source":{"type":"string"},"reason":{"type":"string"}},
+  "oneOf":[
+    {"properties":{"status":{"enum":["EXACT","ESTIMATED"]},"value":{"type":"number"},"lower":{"type":"null"},"upper":{"type":"null"}}},
+    {"properties":{"status":{"const":"BOUNDED"},"value":{"type":"null"},"lower":{"type":"number"},"upper":{"type":"number"}}},
+    {"properties":{"status":{"enum":["UNKNOWN","NOT_APPLICABLE"]},"value":{"type":"null"},"lower":{"type":"null"},"upper":{"type":"null"}}}
+  ]
+}
