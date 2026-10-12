@@ -1,0 +1,30 @@
+{
+  "action": "opponent",
+  "as_of": "2026-10-10",
+  "history": [
+    {
+      "style": "bb",
+      "date": "2026-10-01"
+    },
+    {
+      "style": "bb",
+      "date": "2026-10-02"
+    },
+    {
+      "style": "british",
+      "date": "2026-10-03"
+    },
+    {
+      "style": "spartak",
+      "date": "2026-10-04"
+    },
+    {
+      "style": "tiki",
+      "date": "2026-10-05"
+    },
+    {
+      "style": "bb",
+      "date": "2026-10-06"
+    }
+  ]
+}

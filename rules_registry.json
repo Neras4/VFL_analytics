@@ -1,0 +1,26 @@
+{
+  "ruleset_name": "all_rules(1).md project snapshot",
+  "snapshot_date": "2026-09-28",
+  "game_season": "unverified_for_current_live_site",
+  "source": "Virtual Soccer Lig project library: all_rules(1).md",
+  "exact_components": [
+    {"id":"fatigue_reduction","section":"2.5","state":"implemented","note":"percentage reduction"},
+    {"id":"favorite_style_bonus","section":"2.10","state":"implemented","note":"0.5% per studied 20%, max 2.5%"},
+    {"id":"player_style_collision","section":"2.10","state":"implemented","note":"-1%"},
+    {"id":"style_collision_cycle","section":"2.11","state":"implemented","note":"direction only, not size"},
+    {"id":"captain_age","section":"2.8","state":"partial","note":"without Ka"},
+    {"id":"mutual_understanding","section":"2.12","state":"partial","note":"requires known links and styles"},
+    {"id":"defense_type","section":"2.13","state":"implemented","note":">3 attacking players: zonal"},
+    {"id":"youth_growth","section":"young player end-season growth","state":"implemented","note":"ages 16-23 thresholds"},
+    {"id":"veteran_usefulness","section":"veteran season usefulness","state":"partial","note":">=55%, excludes training award conditions"}
+  ],
+  "missing_or_unverified": [
+    {"id":"position_style_modifiers","why":"numeric position bonuses are embedded in styles.png image"},
+    {"id":"out_of_position_coefficients","why":"separate rules section must be formalized"},
+    {"id":"special_ability_matrix","why":"needs exact tables and order"},
+    {"id":"weather_and_home","why":"numeric modifiers not yet validated"},
+    {"id":"generator_goal_probabilities","why":"not directly disclosed"},
+    {"id":"fatigue_transition","why":"requires stamina rules and schedule"},
+    {"id":"manager_behavior_calibration","why":"requires chronological actual match data"}
+  ]
+}

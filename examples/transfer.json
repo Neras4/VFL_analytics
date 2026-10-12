@@ -1,0 +1,196 @@
+{
+  "action": "transfer",
+  "players": [
+    {
+      "id": "0",
+      "name": "Synthetic player 0",
+      "positions": [
+        "GK"
+      ],
+      "age": 28,
+      "strength": 70,
+      "form": 110,
+      "fatigue": 10,
+      "favorite_style": "spartak",
+      "style_known_percent": 100
+    },
+    {
+      "id": "1",
+      "name": "Synthetic player 1",
+      "positions": [
+        "LD"
+      ],
+      "age": 28,
+      "strength": 71,
+      "form": 110,
+      "fatigue": 10,
+      "favorite_style": "spartak",
+      "style_known_percent": 100
+    },
+    {
+      "id": "2",
+      "name": "Synthetic player 2",
+      "positions": [
+        "CD"
+      ],
+      "age": 28,
+      "strength": 72,
+      "form": 110,
+      "fatigue": 10,
+      "favorite_style": "spartak",
+      "style_known_percent": 100
+    },
+    {
+      "id": "3",
+      "name": "Synthetic player 3",
+      "positions": [
+        "CD"
+      ],
+      "age": 28,
+      "strength": 73,
+      "form": 110,
+      "fatigue": 10,
+      "favorite_style": "spartak",
+      "style_known_percent": 100
+    },
+    {
+      "id": "4",
+      "name": "Synthetic player 4",
+      "positions": [
+        "RD"
+      ],
+      "age": 28,
+      "strength": 74,
+      "form": 110,
+      "fatigue": 10,
+      "favorite_style": "spartak",
+      "style_known_percent": 100
+    },
+    {
+      "id": "5",
+      "name": "Synthetic player 5",
+      "positions": [
+        "LM"
+      ],
+      "age": 28,
+      "strength": 75,
+      "form": 110,
+      "fatigue": 10,
+      "favorite_style": "spartak",
+      "style_known_percent": 100
+    },
+    {
+      "id": "6",
+      "name": "Synthetic player 6",
+      "positions": [
+        "DM"
+      ],
+      "age": 28,
+      "strength": 76,
+      "form": 110,
+      "fatigue": 10,
+      "favorite_style": "spartak",
+      "style_known_percent": 100
+    },
+    {
+      "id": "7",
+      "name": "Synthetic player 7",
+      "positions": [
+        "CM"
+      ],
+      "age": 28,
+      "strength": 77,
+      "form": 110,
+      "fatigue": 10,
+      "favorite_style": "spartak",
+      "style_known_percent": 100
+    },
+    {
+      "id": "8",
+      "name": "Synthetic player 8",
+      "positions": [
+        "RM"
+      ],
+      "age": 28,
+      "strength": 78,
+      "form": 110,
+      "fatigue": 10,
+      "favorite_style": "spartak",
+      "style_known_percent": 100
+    },
+    {
+      "id": "9",
+      "name": "Synthetic player 9",
+      "positions": [
+        "AM"
+      ],
+      "age": 28,
+      "strength": 79,
+      "form": 110,
+      "fatigue": 10,
+      "favorite_style": "spartak",
+      "style_known_percent": 100
+    },
+    {
+      "id": "10",
+      "name": "Synthetic player 10",
+      "positions": [
+        "CF"
+      ],
+      "age": 28,
+      "strength": 80,
+      "form": 110,
+      "fatigue": 10,
+      "favorite_style": "spartak",
+      "style_known_percent": 100
+    },
+    {
+      "id": "11",
+      "name": "Synthetic player 11",
+      "positions": [
+        "CF"
+      ],
+      "age": 28,
+      "strength": 81,
+      "form": 110,
+      "fatigue": 10,
+      "favorite_style": "spartak",
+      "style_known_percent": 100
+    }
+  ],
+  "candidate": {
+    "id": "new",
+    "name": "Synthetic CF",
+    "positions": [
+      "CF"
+    ],
+    "age": 20,
+    "strength": 120,
+    "form": 110,
+    "fatigue": 5,
+    "favorite_style": "spartak",
+    "style_known_percent": 100
+  },
+  "plans": [
+    {
+      "slots": [
+        "GK",
+        "LD",
+        "CD1",
+        "CD2",
+        "RD",
+        "LM",
+        "DM",
+        "CM",
+        "RM",
+        "AM",
+        "CF"
+      ]
+    }
+  ],
+  "styles": [
+    "spartak"
+  ],
+  "price": 4500000,
+  "cash": 7000000
+}
