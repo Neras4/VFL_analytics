@@ -87,4 +87,5 @@ def merge_team_snapshots(snapshots):
     result['playerDetails'] = list(details.values())
     return {'snapshot': result, 'provenance': provenance, 'conflicts': conflicts,
             'issues': diagnostics, 'sources': sources,
+            'effective_sections':sorted(result),
             'policy': 'Latest roster membership/state including null; latest present section; details by stable ID'}

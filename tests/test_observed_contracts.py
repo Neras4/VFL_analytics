@@ -8,7 +8,6 @@ from vfl_analytics.snapshots import merge_team_snapshots
 from vfl_analytics.market_adapter import adapt_market_snapshot
 from vfl_analytics.cli import run_request
 
-pytestmark=pytest.mark.observed
 ROOT=Path(__file__).parent/'fixtures'/'observed'
 
 
@@ -16,6 +15,7 @@ def fixture(name):
     return json.loads((ROOT/(name+'.json')).read_text(encoding='utf8'))
 
 
+@pytest.mark.observed
 @pytest.mark.parametrize('team,count',[('own',3),('opponent',3)])
 def test_observed_join_preserves_sections_and_ids(team,count):
     normal,deep=fixture(team+'_normal'),fixture(team+'_deep')
@@ -34,6 +34,7 @@ def test_observed_join_preserves_sections_and_ids(team,count):
         assert all(e['raw_style']=='Неизвестно' for e in out['evidence_by_id'].values())
 
 
+@pytest.mark.observed
 def test_observed_scopes_and_style_label_are_not_verification():
     out=adapt_roster(fixture('own_deep'))
     assert all(p.style_known_percent is None and not p.favorite_style_is_known for p in out['players'])
@@ -43,6 +44,7 @@ def test_observed_scopes_and_style_label_are_not_verification():
         assert e['selectedStats'] is not e['rosterSeasonStats']
 
 
+@pytest.mark.observed
 @pytest.mark.parametrize('name,count',[('market_0',0),('market_50',2),('market_38',2),('bids_0',0),('bids_1',1)])
 def test_observed_market_boundary(name,count):
     out=adapt_market_snapshot(fixture(name))
@@ -60,12 +62,14 @@ def test_observed_market_boundary(name,count):
         assert out['purchase_limits']['GK']==1
 
 
+@pytest.mark.observed
 def test_observed_bid_states_independent():
     before,after=[adapt_market_snapshot(fixture(n)) for n in ('bids_0','bids_1')]
     assert before['generatedAt']<after['generatedAt']
     assert before['total_rows']==0 and after['total_rows']==1
 
 
+@pytest.mark.observed
 def test_observed_cli_merge_and_market_serializable():
     for request in [dict(action='merge_snapshots',snapshots=[fixture('own_normal'),fixture('own_deep')]),
                     dict(action='adapt_market',snapshot=fixture('market_50'))]:

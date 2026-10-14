@@ -26,5 +26,7 @@ testpaths = ["tests"]
 markers = [
   "rule_reference: direct published example or table lookup",
   "synthetic: artificial arithmetic or regression scenario",
-  "observed: actual game data (none provided in this release)",
+  "observed: inspected real export structures, minimized and anonymized",
+  "integration: JSON through adapter, rules and optimizer",
+  "regression: compatibility and fault-isolation checks",
 ]

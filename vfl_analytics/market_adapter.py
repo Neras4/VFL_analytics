@@ -105,6 +105,14 @@ def adapt_market_snapshot(snapshot):
             issues.append('pagination:inconsistent_pages')
         if not isinstance(sort.get('applied'),bool) or not isinstance(sort.get('requested'),str):
             raise ValueError('sort.requested string and sort.applied boolean required')
+        if sort.get('nativeSort') is not None:
+            number(sort['nativeSort'],'sort.nativeSort',minimum=0,integer=True)
+        filter_styles=filters.get('styles',[])
+        if not isinstance(filter_styles,list) or any(not isinstance(s,dict) or not isinstance(s.get('label'),str) for s in filter_styles):
+            raise ValueError('filters.styles must be a list of style descriptors')
+        from .models import style_id
+        for s in filter_styles:
+            if style_id(s['label']) in (None,'normal'): raise ValueError('Invalid filter player style')
         for key,value in filters.items():
             if isinstance(value,dict) and ('min' in value or 'max' in value):
                 for bound in ('min','max'):

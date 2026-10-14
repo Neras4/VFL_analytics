@@ -40,7 +40,8 @@ def _id(row):
 def adapt_roster(snapshot):
     if not isinstance(snapshot,dict):
         raise ValueError('Snapshot must be an object')
-    roster=snapshot.get('roster',snapshot.get('team',{}).get('roster',{}))
+    team=snapshot.get('team')
+    roster=snapshot.get('roster',(team.get('roster',{}) if isinstance(team,dict) else {}))
     if isinstance(roster,dict):
         rows=roster.get('players',snapshot.get('players',[]))
     else:
@@ -138,6 +139,9 @@ def adapt_roster(snapshot):
                 raise ValueError('Fractional style study percentage')
             fatigue=_optional_num(field('fatigue')); form=_optional_num(field('form'))
             specials=row.get('specials',detail.get('specials',[]))
+            specials_known=specials is not None and ('specials' in row or 'specials' in detail)
+            if specials is None:
+                specials=[]
             if isinstance(specials,list):
                 specials=[s+'1' if s in ABILITY_CODES else s for s in specials]
             minutes=info.get('seasonMinutes')
@@ -147,7 +151,7 @@ def adapt_roster(snapshot):
                      fatigue=fatigue,form=form,real_strength=_optional_num(field('realStrength')),
                      favorite_style=favorite,style_known_percent=None if known is None else int(known),
                      nationality=row.get('country',row.get('nationality')),
-                     specials=specials,specials_known='specials' in row or 'specials' in detail,available=row.get('available'),
+                     specials=specials,specials_known=specials_known,available=row.get('available'),
                      value=_optional_num(field('value')),
                      salary_per_tour=_optional_num(field('salaryPerTour',current_contract.get('salaryPerTour'))),
                      played_minutes=_optional_num(minutes),is_league_player=row.get('isLeaguePlayer',False))

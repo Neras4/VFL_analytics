@@ -104,15 +104,23 @@
             "form": 100,
             "specials": "Л4 И4 Ск4 Ат2",
             "style": {
-              "id": 2,
-              "label": "Бей-беги",
+              "id": null,
+              "label": null,
               "possibleStyles": [
                 {
                   "id": 2,
                   "label": "Бей-беги"
+                },
+                {
+                  "id": 5,
+                  "label": "Катеначчо"
+                },
+                {
+                  "id": 6,
+                  "label": "Британский"
                 }
               ],
-              "raw": "Бей-беги"
+              "raw": "Бей-беги; Катеначчо; Британский"
             },
             "growth": {
               "percent": null,

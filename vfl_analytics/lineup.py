@@ -133,6 +133,11 @@ def _evaluate(players,plan,style,matrix,assign,context=None):
         CalculationResult(ResultStatus.ESTIMATED,value=subtotal,unit='partial_strength_units',reason='Known component subtotal; captain and other mechanics omitted'))
     return {'style':style,'lineup':[{'slot':slot,'player_id':p.id,'name':p.name,
                 'partial_strength':values[p.id].value,'strength_result':values[p.id].to_dict()} for slot,p in mapping.items()],
+        'external_position_factors':{'status':'ESTIMATED' if style in plan.style_position_multipliers else 'NOT_APPLICABLE',
+            'values':plan.style_position_multipliers.get(style),
+            'provenance':plan.style_position_provenance.get(style,{'source':'legacy caller input','rule_version':'UNKNOWN',
+                'verification_status':'UNVERIFIED','unit':'multiplier'}),
+            'note':'External research scenario; separate from official qualitative color table'},
         'linear_strength':sum(by_id.values()),'included_chemistry_bonus':None if uncertain else known_chem,
         'chemistry_components':chemistry,'chemistry_bonus_result':chem_result.to_dict(),
         'included_age_captain_bonus':None,'captain_id':captain['captain_id'],
@@ -216,6 +221,9 @@ def optimize_lineups(players,plans,styles=None,top_n=3,*,incumbents=None,mode='k
                     item['conservative_score']=lower
                     item['conservative_score_result']=unknown(unit='partial_strength_units',reason='Conditional partial bounds unavailable').to_dict() if lower is None else CalculationResult(
                         ResultStatus.ESTIMATED,value=lower,unit='partial_strength_units',reason='Explicit lower bound of provisional component model; not guaranteed full force').to_dict()
+                    item['comparison_status']='UNKNOWN' if lower is None else 'ESTIMATED'
+                    if lower is None:
+                        item['warnings'].append('conservative_comparison_unavailable; diagnostic candidate ordered by explicit proxy only')
             if mode=='conservative':
                 ranked=[x for x in evaluations if x['conservative_score'] is not None]
                 all_results.extend([max(ranked,key=lambda x:x['conservative_score'])] if ranked else evaluations[:1])
