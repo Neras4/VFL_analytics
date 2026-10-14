@@ -1,8 +1,9 @@
-"""Static Assistant boundary. Synthetic fixtures are not observed-export acceptance."""
+"""Assistant boundary with local row errors and explicit source evidence."""
 import math
 import re
 from .models import Player, STYLE_ALIASES
 from .validation import identity,ABILITY_CODES
+from .source_evidence import fatigue_observation, scouting_style
 
 
 def _optional_num(value):
@@ -40,7 +41,8 @@ def _id(row):
 def adapt_roster(snapshot):
     if not isinstance(snapshot,dict):
         raise ValueError('Snapshot must be an object')
-    roster=snapshot.get('roster',snapshot.get('team',{}).get('roster',{}))
+    team=snapshot.get('team')
+    roster=snapshot.get('roster',(team.get('roster',{}) if isinstance(team,dict) else {}))
     if isinstance(roster,dict):
         rows=roster.get('players',snapshot.get('players',[]))
     else:
@@ -73,14 +75,18 @@ def adapt_roster(snapshot):
     season_by_id={}
     if season is not None:
         if not isinstance(season,dict) or not isinstance(season.get('players'),list):
-            raise ValueError('rosterSeasonStats must contain players list')
+            issues.append('rosterSeasonStats:invalid:expected object with players list')
+            season=None
+    if season is not None:
         scope=season.get('scope') or {}
-        if scope.get('sort')!=300 or scope.get('label')!='по всем турнирам':
+        if not isinstance(scope,dict) or scope.get('sort')!=300 or scope.get('label')!='по всем турнирам':
             issues.append('rosterSeasonStats:unverified_all_tournament_scope')
+        ambiguous_season=set()
         for record in season['players']:
             try:
                 sid=_id(record)
-                if sid in season_by_id:
+                if sid in season_by_id or sid in ambiguous_season:
+                    ambiguous_season.add(sid);season_by_id.pop(sid,None)
                     raise ValueError('Duplicate season-stat player ID')
                 season_by_id[sid]=record
             except (ValueError,TypeError,AttributeError) as exc:
@@ -101,13 +107,22 @@ def adapt_roster(snapshot):
             info=detail.get('info') or {}
             contract=detail.get('contract') or {}
             current_contract=contract.get('current') or {}
-            # A present roster key, including null, always wins over profile copies.
-            def field(key, alternate=None):
-                if key in row:
-                    return row[key]
-                if key in detail:
-                    return detail[key]
-                return info.get(key) if alternate is None else alternate
+            if not isinstance(current_contract,dict):
+                raise ValueError('contract.current must be object or null')
+            provenance={}; conflicts=[]
+            # General fields retain roster priority; fatigue has a verified collector-specific selector below.
+            def field(key, alternate=None, alternate_source=None):
+                candidates=[(label,source[key]) for label,source in
+                            [('roster',row),('playerDetails',detail),('playerDetails.info',info)] if key in source]
+                if alternate_source is not None:
+                    candidates.append((alternate_source,alternate))
+                if not candidates:
+                    return alternate
+                provenance[key]={'source':candidates[0][0],'value':candidates[0][1]}
+                if any(value!=candidates[0][1] for _,value in candidates[1:]):
+                    conflicts.append({'field':key,'selected_source':candidates[0][0],
+                                      'observations':[{'source':label,'value':value} for label,value in candidates]})
+                return candidates[0][1]
             age=_optional_num(field('age')); strength=_optional_num(field('strength'))
             if age is None or strength is None or not row.get('name') or not _positions(row):
                 issues.append(f'{prefix}:missing_id_name_age_strength_or_position')
@@ -117,14 +132,25 @@ def adapt_roster(snapshot):
             favorite=row.get('favoriteStyle',row.get('favorite_style',info.get('style')))
             if isinstance(favorite,dict):
                 favorite=favorite.get('label',favorite.get('name'))
+            if isinstance(favorite,str) and favorite.strip().casefold() in ('неизвестно','unknown','?','—',''):
+                favorite=None
             if favorite is not None and (not isinstance(favorite,str) or favorite.strip().casefold() not in STYLE_ALIASES):
                 issues.append(f'{prefix}:unverified_favorite_style')
                 favorite=None
             known=_optional_num(row.get('styleKnownPercent',row.get('style_known_percent')))
             if known is not None and known!=int(known):
                 raise ValueError('Fractional style study percentage')
-            fatigue=_optional_num(field('fatigue')); form=_optional_num(field('form'))
+            field('fatigue')  # Retain raw disagreement evidence independently of selection.
+            fatigue_evidence=fatigue_observation(snapshot,row,detail,info,sid)
+            fatigue=_optional_num(fatigue_evidence['value']); form=_optional_num(field('form'))
+            provenance['fatigue']=fatigue_evidence
+            study=scouting_style(snapshot,sid,favorite,known)
+            known=study['percent']
+            issues.extend(f'{prefix}:{issue}' for issue in study['issues'])
             specials=row.get('specials',detail.get('specials',[]))
+            specials_known=specials is not None and ('specials' in row or 'specials' in detail)
+            if specials is None:
+                specials=[]
             if isinstance(specials,list):
                 specials=[s+'1' if s in ABILITY_CODES else s for s in specials]
             minutes=info.get('seasonMinutes')
@@ -133,10 +159,12 @@ def adapt_roster(snapshot):
             p=Player(id=sid,name=row['name'],positions=_positions(row),age=int(age),strength=strength,
                      fatigue=fatigue,form=form,real_strength=_optional_num(field('realStrength')),
                      favorite_style=favorite,style_known_percent=None if known is None else int(known),
+                     favorite_style_verified=study['verified'],
                      nationality=row.get('country',row.get('nationality')),
-                     specials=specials,specials_known='specials' in row or 'specials' in detail,available=row.get('available'),
+                     specials=specials,specials_known=specials_known,available=row.get('available'),
                      value=_optional_num(field('value')),
-                     salary_per_tour=_optional_num(field('salaryPerTour',current_contract.get('salaryPerTour'))),
+                     salary_per_tour=_optional_num(field('salaryPerTour',current_contract.get('salaryPerTour'),
+                         'contract.current' if 'salaryPerTour' in current_contract else None)),
                      played_minutes=_optional_num(minutes),is_league_player=row.get('isLeaguePlayer',False))
             players.append(p)
             if fatigue is None or form is None:
@@ -147,13 +175,21 @@ def adapt_roster(snapshot):
             evidence[sid]={'selectedStats':row.get('selectedStats'),
                           'rosterSeasonStats':season_by_id.get(sid),
                           'rosterSeasonStatsScope':None if season is None else season.get('scope'),
-                          'contract':contract or None,'formTrend':row.get('formTrend'),
+                          'contract':contract or None,'formTrend':field('formTrend'),
                           'recentMatches':info.get('recentMatches'),
+                          'profileStats':detail.get('stats'),
+                          'source_values':{'roster':row,'detail':detail},
+                          'field_provenance':provenance,'conflicts':conflicts,
+                          'scouting':study,
+                          'raw_style':info.get('style'),
+                          'availability_status':'UNKNOWN' if p.available is None else ('AVAILABLE' if p.available else 'UNAVAILABLE'),
                           'style_label_is_not_verification':True}
         except (ValueError,TypeError) as exc:
             issues.append(f'{prefix}:invalid:{exc}')
     for sid in sorted(set(by_id)-seen):
         issues.append(f'orphan_player_details:{sid}')
-    return {'players':players,'issues':issues,'accepted':len(players),'total':len(rows),
+    errors=[x for x in issues if ':invalid:' in x or 'missing_id_name_age_strength_or_position' in x]
+    return {'players':players,'issues':issues,'accepted':len(players),'rejected':len(rows)-len(players),'total':len(rows),
+            'error_count':len(errors),'warning_count':len(issues)-len(errors),
             'evidence_by_id':evidence,
-            'note':'Static Assistant source contract + SYNTHETIC fixtures; real Normal/Deep acceptance deferred to v0.2.3'}
+            'note':'Normalized observations; text style labels do not prove study; no inferred availability'}

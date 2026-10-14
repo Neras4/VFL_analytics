@@ -1,0 +1,32 @@
+{
+  "collector": {
+    "version": "0.5.11",
+    "tree_sha": "988f7c662f5e671fd96ed6d6352c6fe7bce5b95a",
+    "content_blob_sha": "321ef4abdef9e22ed46068780a7d5feade4f059b",
+    "url": "https://github.com/Neras4/vfl-assistant-extension/blob/main/content.js",
+    "findings": [
+      "rosterCompact gates fatigue on args[13] > 0 (visible form); null does not prove unavailable fatigue",
+      "parsePlayerInfo reads displayed Усталость independently with cellNumber",
+      "mergePlayerDetails top-level fatigue copies roster; it is not an independent profile observation",
+      "generatedAt is assigned before Deep scan, not a per-player observation timestamp",
+      "parseScoutingHistory records completed rows with date, playerId, studyType, level/maxLevel; collectManagement validates current selected season"
+    ],
+    "immutable_blob_api": "https://api.github.com/repos/Neras4/vfl-assistant-extension/git/blobs/321ef4abdef9e22ed46068780a7d5feade4f059b"
+  },
+  "rules": {
+    "url": "https://vfliga.com/rules.php?page=103",
+    "sections": [
+      "7.2",
+      "7.2.1",
+      "7.3.3"
+    ],
+    "retrieved_date": "2026-10-14",
+    "version": "NOT_STATED_IN_CAPTURE",
+    "findings": [
+      "Favorite hidden parameters are fixed over player career",
+      "Five completed style studies reveal the single actual favorite style; one completed stage is 20% study",
+      "Growth/decline/injury/loyalty are separate studies"
+    ]
+  },
+  "policy": "Only supported opponent 0.5.11 hidden-form nulls allow same-collection profile fatigue fallback. Own competitive roster null unchanged. Old profile collections withheld. Numeric roster zero is observed, not missing."
+}

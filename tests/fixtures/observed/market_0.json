@@ -1,0 +1,51 @@
+{
+  "kind": "vfl-transfer-market",
+  "exporterVersion": "0.5.11",
+  "generatedAt": "2026-10-14T15:57:31.199Z",
+  "management": {
+    "transferMarket": {
+      "collectedAt": "2026-10-14T15:57:31.199Z",
+      "search": {
+        "filters": {
+          "position": "CD",
+          "styles": [
+            {
+              "id": 2,
+              "label": "Бей-беги"
+            }
+          ],
+          "age": {
+            "min": 20,
+            "max": null
+          },
+          "price": {
+            "min": null,
+            "max": 15
+          },
+          "strength": {
+            "min": null,
+            "max": null
+          },
+          "askingPercent": {
+            "min": null,
+            "max": null
+          }
+        },
+        "sort": {
+          "requested": "strength",
+          "applied": false,
+          "nativeSort": null
+        },
+        "pagination": {
+          "totalResults": 0,
+          "totalPages": 0,
+          "page": 1,
+          "pageSize": 50,
+          "shownFrom": 0,
+          "shownTo": 0
+        },
+        "players": []
+      }
+    }
+  }
+}

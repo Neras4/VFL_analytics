@@ -1,0 +1,89 @@
+{
+  "kind": "vfl-own-team-context",
+  "exporterVersion": "0.5.11",
+  "depth": "deep",
+  "generatedAt": "2026-10-14T15:56:28.271Z",
+  "teamId": "1",
+  "roster": {
+    "players": [
+      {
+        "id": "104",
+        "name": "Studied player",
+        "position": "CD/CM",
+        "age": 20,
+        "strength": 74,
+        "fatigue": 5,
+        "form": 121,
+        "specials": [
+          "И3",
+          "От"
+        ]
+      }
+    ]
+  },
+  "playerDetails": [
+    {
+      "playerId": "104",
+      "info": {
+        "playerId": "104",
+        "style": "Спартаковский"
+      }
+    }
+  ],
+  "rosterSeasonStats": {
+    "scope": {
+      "label": "по всем турнирам",
+      "season": 79,
+      "sort": 300
+    },
+    "players": []
+  },
+  "management": {
+    "scouting": {
+      "season": 79,
+      "collectedAt": "2026-10-14T15:56:45.612Z",
+      "completed": [
+        {
+          "date": "5 окт 2026",
+          "studyType": "стиль",
+          "result": {
+            "level": 5,
+            "maxLevel": 5,
+            "raw": "5 из 5"
+          },
+          "playerId": "104"
+        },
+        {
+          "date": "5 окт 2026",
+          "studyType": "рост силы",
+          "result": {
+            "level": 2,
+            "maxLevel": 4,
+            "raw": "2 из 4"
+          },
+          "playerId": "105"
+        },
+        {
+          "date": "29 сен 2026",
+          "studyType": "стиль",
+          "result": {
+            "level": 4,
+            "maxLevel": 5,
+            "raw": "4 из 5"
+          },
+          "playerId": "104"
+        },
+        {
+          "date": "29 сен 2026",
+          "studyType": "рост силы",
+          "result": {
+            "level": 1,
+            "maxLevel": 4,
+            "raw": "1 из 4"
+          },
+          "playerId": "105"
+        }
+      ]
+    }
+  }
+}

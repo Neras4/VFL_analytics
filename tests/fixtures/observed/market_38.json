@@ -1,0 +1,152 @@
+{
+  "kind": "vfl-transfer-market",
+  "exporterVersion": "0.5.11",
+  "generatedAt": "2026-10-14T15:57:59.853Z",
+  "management": {
+    "transferMarket": {
+      "collectedAt": "2026-10-14T15:57:59.853Z",
+      "search": {
+        "filters": {
+          "position": "RF",
+          "styles": [
+            {
+              "id": 2,
+              "label": "Бей-беги"
+            },
+            {
+              "id": 5,
+              "label": "Катеначчо"
+            },
+            {
+              "id": 6,
+              "label": "Британский"
+            }
+          ],
+          "age": {
+            "min": 20,
+            "max": null
+          },
+          "price": {
+            "min": 15,
+            "max": null
+          },
+          "strength": {
+            "min": null,
+            "max": 120
+          },
+          "askingPercent": {
+            "min": null,
+            "max": null
+          }
+        },
+        "sort": {
+          "requested": "price",
+          "applied": false,
+          "nativeSort": null
+        },
+        "pagination": {
+          "totalResults": 38,
+          "totalPages": 1,
+          "page": 1,
+          "pageSize": 50,
+          "shownFrom": 1,
+          "shownTo": 38
+        },
+        "players": [
+          {
+            "rank": 1,
+            "position": "RM/RF",
+            "age": 22,
+            "strength": 113,
+            "fatigue": 4,
+            "form": 100,
+            "specials": "Г4 Ск4 У4 Пд4",
+            "style": {
+              "id": 5,
+              "label": "Катеначчо",
+              "possibleStyles": [
+                {
+                  "id": 5,
+                  "label": "Катеначчо"
+                }
+              ],
+              "raw": "Катеначчо"
+            },
+            "growth": {
+              "percent": null,
+              "min": 51,
+              "max": 99,
+              "level": null,
+              "maxLevel": null,
+              "raw": "где-то в промежутке от 51% до 99%"
+            },
+            "decline": {
+              "percent": 14,
+              "min": null,
+              "max": null,
+              "level": null,
+              "maxLevel": null,
+              "raw": "14%"
+            },
+            "bidsCount": 0,
+            "askingPercent": 95,
+            "playerId": "200",
+            "playerName": "Market player",
+            "value": 100000,
+            "askingPrice": 110000
+          },
+          {
+            "rank": 2,
+            "position": "CF/RF",
+            "age": 21,
+            "strength": 110,
+            "fatigue": 0,
+            "form": 100,
+            "specials": "Л4 И4 Ск4 Ат2",
+            "style": {
+              "id": null,
+              "label": null,
+              "possibleStyles": [
+                {
+                  "id": 2,
+                  "label": "Бей-беги"
+                },
+                {
+                  "id": 5,
+                  "label": "Катеначчо"
+                },
+                {
+                  "id": 6,
+                  "label": "Британский"
+                }
+              ],
+              "raw": "Бей-беги; Катеначчо; Британский"
+            },
+            "growth": {
+              "percent": null,
+              "min": 51,
+              "max": 99,
+              "level": null,
+              "maxLevel": null,
+              "raw": "где-то в промежутке от 51% до 99%"
+            },
+            "decline": {
+              "percent": 76,
+              "min": null,
+              "max": null,
+              "level": null,
+              "maxLevel": null,
+              "raw": "76%"
+            },
+            "bidsCount": 0,
+            "askingPercent": 91,
+            "playerId": "201",
+            "playerName": "Market player",
+            "value": 100000,
+            "askingPrice": 110000
+          }
+        ]
+      }
+    }
+  }
+}

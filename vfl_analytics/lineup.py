@@ -133,6 +133,11 @@ def _evaluate(players,plan,style,matrix,assign,context=None):
         CalculationResult(ResultStatus.ESTIMATED,value=subtotal,unit='partial_strength_units',reason='Known component subtotal; captain and other mechanics omitted'))
     return {'style':style,'lineup':[{'slot':slot,'player_id':p.id,'name':p.name,
                 'partial_strength':values[p.id].value,'strength_result':values[p.id].to_dict()} for slot,p in mapping.items()],
+        'external_position_factors':{'status':'ESTIMATED' if style in plan.style_position_multipliers else 'NOT_APPLICABLE',
+            'values':plan.style_position_multipliers.get(style),
+            'provenance':plan.style_position_provenance.get(style,{'source':'legacy caller input','rule_version':'UNKNOWN',
+                'verification_status':'UNVERIFIED','unit':'multiplier'}),
+            'note':'External research scenario; separate from official qualitative color table'},
         'linear_strength':sum(by_id.values()),'included_chemistry_bonus':None if uncertain else known_chem,
         'chemistry_components':chemistry,'chemistry_bonus_result':chem_result.to_dict(),
         'included_age_captain_bonus':None,'captain_id':captain['captain_id'],
@@ -162,6 +167,14 @@ def _incumbent_assignment(record,players,plan,style,matrix):
     return result
 
 
+def compact_candidate(item):
+    """Stable small result; large per-player catalog/evidence stays in detailed output."""
+    keys=('style','slots','lineup','ranking_score','partial_total','partial_model_range',
+          'conservative_score','conservative_score_result','lineup_eligibility','formation_validation',
+          'variants_considered','warnings','external_position_factors')
+    return {k:item[k] for k in keys if k in item}
+
+
 def optimize_lineups(players,plans,styles=None,top_n=3,*,incumbents=None,mode='known_components',context=None):
     number(top_n,'top_n',positive=True,integer=True)
     top_n=int(top_n)
@@ -178,7 +191,8 @@ def optimize_lineups(players,plans,styles=None,top_n=3,*,incumbents=None,mode='k
         raise ValueError('Bounded search supports <=32 plans and <=200 players')
     if incumbents is not None and (not isinstance(incumbents,list) or len(incumbents)>224):
         raise ValueError('Incumbent list must contain at most 224 records')
-    all_results=[]; invalid=[]
+    all_results=[]; invalid=[]; coverage={s:{'plans_considered':len(plans),'generated_candidates':0,
+        'assignment_feasible_candidates':0,'fully_verified_candidates':0} for s in styles}
     for plan in plans:
         formation=validate_formation(plan.slots,plan.defense_formation,plan.formation_base_slots,plan.tactical_permissions)
         for style in styles:
@@ -200,6 +214,8 @@ def optimize_lineups(players,plans,styles=None,top_n=3,*,incumbents=None,mode='k
                     if candidate not in candidates:
                         candidates.append(candidate)
             evaluations=[_evaluate(players,plan,style,matrix,a,context) for a in candidates]
+            coverage[style]['generated_candidates']+=len(evaluations)
+            coverage[style]['assignment_feasible_candidates']+=len(evaluations)
             for item in evaluations:
                 item.update(slots=list(plan.slots),variants_considered=len(candidates),incumbents_retained=retained)
                 item['formation_validation']=formation
@@ -212,10 +228,13 @@ def optimize_lineups(players,plans,styles=None,top_n=3,*,incumbents=None,mode='k
                     warnings.append('special_position_tactical_permissions_unverified')
                 item['warnings']=sorted(set(item['warnings']+warnings))
                 if mode=='conservative':
-                    lower=item['partial_model_range'].get('lower',item['partial_model_range'].get('value'))
+                    lower=item['partial_model_range']['lower'] if item['partial_model_range']['lower'] is not None else item['partial_model_range']['value']
                     item['conservative_score']=lower
                     item['conservative_score_result']=unknown(unit='partial_strength_units',reason='Conditional partial bounds unavailable').to_dict() if lower is None else CalculationResult(
                         ResultStatus.ESTIMATED,value=lower,unit='partial_strength_units',reason='Explicit lower bound of provisional component model; not guaranteed full force').to_dict()
+                    item['comparison_status']='UNKNOWN' if lower is None else 'ESTIMATED'
+                    if lower is None:
+                        item['warnings'].append('conservative_comparison_unavailable; diagnostic candidate ordered by explicit proxy only')
             if mode=='conservative':
                 ranked=[x for x in evaluations if x['conservative_score'] is not None]
                 all_results.extend([max(ranked,key=lambda x:x['conservative_score'])] if ranked else evaluations[:1])
@@ -235,10 +254,23 @@ def optimize_lineups(players,plans,styles=None,top_n=3,*,incumbents=None,mode='k
             else:
                 all_results.append(max(evaluations,key=lambda x:x['ranking_score']))
     all_results.sort(key=lambda x:x.get('conservative_score') if mode=='conservative' and x.get('conservative_score') is not None else x['ranking_score'],reverse=True)
+    summaries={}
+    for style in styles:
+        rows=[x for x in all_results if x['style']==style]
+        summaries[style]={**coverage[style], 'best_known_proxy':compact_candidate(max(rows,key=lambda x:x['ranking_score'])) if rows else None,
+            'best_conservative':compact_candidate(max((x for x in rows if x.get('conservative_score') is not None),
+                key=lambda x:x['conservative_score'])) if any(x.get('conservative_score') is not None for x in rows) else None,
+            'pareto_status':'NONDOMINATED_WITHIN_GENERATED_CANDIDATES' if mode=='pareto' and rows else 'NOT_EVALUATED_IN_THIS_MODE',
+            'pareto_count':len(rows) if mode=='pareto' else None,
+            'formation_candidates':[compact_candidate(x) for x in rows[:3]],
+            'unknown_effects':['Full modifier order','Captain/donor force bases','Chemistry geometry','Cohesion history','Target weather','Match eligibility'],
+            'collision':{'status':'UNKNOWN','reason':'Opponent chosen team style not supplied'},
+            'scope':'Assignment constraints pass; full tactical/availability legality not established'}
     return {'status':'partial_model' if all_results else 'no_valid_lineup','ranking_mode':mode,
+        'style_summaries':summaries,
         'pareto_truncated':mode=='pareto' and len(all_results)>top_n,
         'retained_candidates_before_output_limit':len(all_results),
         'recommendation':None,'optimization':'exact_linear_search_subproblem_plus_bounded_reranking; not global nonlinear optimum',
-        'results':all_results[:top_n],'evaluated_style_formations':len(all_results),'invalid_combinations':invalid,
+        'results':all_results[:top_n],'evaluated_style_formations':len(plans)*len(styles),'invalid_combinations':invalid,
         'not_modeled':['Full modifier order','Captain until real position-force inputs verified','Weather/home/attitude','Substitutions','Match generator and win probabilities'],
         'warning':'Scores/bounds are conditional partial-model outputs; no official force or final lineup recommendation'}

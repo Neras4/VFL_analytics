@@ -136,3 +136,53 @@ NaN/Infinity и bool — ошибки валидации. Целые значе�
   `abstain_uncertain_lineup_strength`, без рекомендации/численной прибавки.
 - Возраст Player, капитана и сезонного расчёта — целое 16–34. Недопустимые
   значения отклоняются. Ка и база реальной позиционной силы остаются backlog.
+
+
+## v0.2.3 Phase 1 boundary additions
+
+`merge_team_snapshots` only merges equal team/kind, ordering aware timestamps.
+Latest roster membership and explicit null state win; present sections are retained,
+profiles join by stable ID. Statistical scope objects are whole observations.
+Provenance identifies input index/time/version; conflicts preserve both field
+observations in adapter evidence. Salary priority is roster → detail → info →
+contract.current fallback: current collector observation wins, conflicting contract
+copies stay in evidence. No minutes are inferred from games or usefulness percent.
+
+`adapt_market_snapshot` never returns Player roster members. possible_styles stays
+a set of alternatives, missing form remains null, requested/applied sort separate.
+Search completeness is distinct from successful row normalization. Bid snapshots
+are independent timestamped states; price and purchase limits remain observations.
+
+PositionPlan links are undirected, no self-links, nonexistent endpoints or duplicate
+reverse pairs. External style_position_multipliers optionally accept per-style
+style_position_provenance {source, rule_version, verification_status, unit}.
+unit=multiplier; verification_status=UNVERIFIED or VERIFIED_BY_CALLER. All external
+factors remain ESTIMATED research scenarios, distinct from official qualitative
+style-position categories. Legacy numeric callers retain support with explicit
+UNVERIFIED/UNKNOWN metadata. Malformed links now consistently raise ValueError.
+
+API additions: adapter accepted/rejected/error_count/warning_count; raw source
+observations in evidence_by_id are private when fed private exports. Do not publish
+unfiltered CLI adapt/merge outputs. Existing normalized Player fields unchanged.
+
+
+## Review D–F contract refinements (0.2.3 unchanged)
+
+Opponent Assistant 0.5.11 fatigue null gated on hidden form may use independent
+same-collection info.fatigue. Numeric roster including zero still wins; stale or
+unresolved conflicting profiles withheld. Other null semantics unchanged. Collection
+reference is not invented per-player time. Same-season completed style studies
+can supply 20×level percent; latest state is not an additive history.
+
+Optimizer style_summaries precede global top_n; evaluated_style_formations now
+counts actual style/plan pairs, not returned candidates. Conservative values use
+value when lower is null. Diagnostic alternative deltas exclude unknown effects.
+
+Validator report schema 2: compact teams/candidate registry/source refs by default,
+optional details.json and raw_diagnostics.json. Root is the resolved project
+local_data storage; matching a path component is insufficient. Team groups are
+kind/ID/current season, with legacy own/opponent aliases only for a single group.
+Missing/known seasons cannot silently merge. Selected historical stats are not
+used as a current-state season. Additional CLI --team-id, --detailed,
+--raw-diagnostics. Consumers of former raw validation.json must use optional details
+or raw output explicitly; this reporting schema change is intentional.

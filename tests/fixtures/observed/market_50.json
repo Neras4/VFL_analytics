@@ -1,0 +1,152 @@
+{
+  "kind": "vfl-transfer-market",
+  "exporterVersion": "0.5.11",
+  "generatedAt": "2026-10-14T15:57:43.018Z",
+  "management": {
+    "transferMarket": {
+      "collectedAt": "2026-10-14T15:57:43.018Z",
+      "search": {
+        "filters": {
+          "position": "CD",
+          "styles": [
+            {
+              "id": 2,
+              "label": "Бей-беги"
+            }
+          ],
+          "age": {
+            "min": 20,
+            "max": null
+          },
+          "price": {
+            "min": 15,
+            "max": null
+          },
+          "strength": {
+            "min": null,
+            "max": null
+          },
+          "askingPercent": {
+            "min": null,
+            "max": null
+          }
+        },
+        "sort": {
+          "requested": "strength",
+          "applied": true,
+          "nativeSort": 5
+        },
+        "pagination": {
+          "totalResults": 63,
+          "totalPages": 2,
+          "page": 1,
+          "pageSize": 50,
+          "shownFrom": 1,
+          "shownTo": 50
+        },
+        "players": [
+          {
+            "rank": 1,
+            "position": "LD/CD",
+            "age": 32,
+            "strength": 173,
+            "fatigue": null,
+            "form": null,
+            "specials": "Шт4 П4 Ат4 Ск4",
+            "style": {
+              "id": 2,
+              "label": "Бей-беги",
+              "possibleStyles": [
+                {
+                  "id": 2,
+                  "label": "Бей-беги"
+                }
+              ],
+              "raw": "Бей-беги"
+            },
+            "growth": {
+              "percent": 80,
+              "min": null,
+              "max": null,
+              "level": null,
+              "maxLevel": null,
+              "raw": "80%"
+            },
+            "decline": {
+              "percent": 17,
+              "min": null,
+              "max": null,
+              "level": null,
+              "maxLevel": null,
+              "raw": "17%"
+            },
+            "bidsCount": 0,
+            "askingPercent": 115,
+            "playerId": "200",
+            "playerName": "Market player",
+            "value": 100000,
+            "askingPrice": 110000
+          },
+          {
+            "rank": 2,
+            "position": "CM/CD",
+            "age": 31,
+            "strength": 165,
+            "fatigue": 2,
+            "form": 88,
+            "specials": "См3 Ск4 Ат2 От3",
+            "style": {
+              "id": null,
+              "label": null,
+              "possibleStyles": [
+                {
+                  "id": 1,
+                  "label": "Спартаковский"
+                },
+                {
+                  "id": 2,
+                  "label": "Бей-беги"
+                },
+                {
+                  "id": 3,
+                  "label": "Бразильский"
+                },
+                {
+                  "id": 5,
+                  "label": "Катеначчо"
+                },
+                {
+                  "id": 6,
+                  "label": "Британский"
+                }
+              ],
+              "raw": "Спартаковский; Бей-беги; Бразильский; Катеначчо; Британский"
+            },
+            "growth": {
+              "percent": 84,
+              "min": null,
+              "max": null,
+              "level": null,
+              "maxLevel": null,
+              "raw": "84%"
+            },
+            "decline": {
+              "percent": 10,
+              "min": null,
+              "max": null,
+              "level": null,
+              "maxLevel": null,
+              "raw": "10%"
+            },
+            "bidsCount": 1,
+            "askingPercent": 95,
+            "playerId": "201",
+            "playerName": "Market player",
+            "value": 100000,
+            "askingPrice": 110000
+          }
+        ]
+      }
+    }
+  }
+}

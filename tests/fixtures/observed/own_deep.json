@@ -1,0 +1,223 @@
+{
+  "kind": "vfl-own-team-context",
+  "depth": "deep",
+  "generatedAt": "2026-10-14T15:56:28.271Z",
+  "exporterVersion": "0.5.11",
+  "teamId": "1",
+  "roster": {
+    "players": [
+      {
+        "id": "100",
+        "name": "Player 100",
+        "country": "Country A",
+        "position": "GK",
+        "age": 22,
+        "strength": 126,
+        "fatigue": 4,
+        "form": 75,
+        "formTrend": "rising",
+        "realStrength": 97,
+        "specials": [
+          "В4",
+          "Р4",
+          "Ат4",
+          "Ка3"
+        ],
+        "selectedStats": {
+          "scope": {
+            "sort": 3,
+            "label": "по чемпионату",
+            "season": 79
+          },
+          "averageRating": 5.87,
+          "games": 3,
+          "goals": 0,
+          "assists": 0,
+          "yellowCards": 0,
+          "redCards": 0
+        }
+      },
+      {
+        "id": "101",
+        "name": "Player 101",
+        "country": "Country A",
+        "position": "GK",
+        "age": 24,
+        "strength": 79,
+        "fatigue": 0,
+        "form": 125,
+        "formTrend": "falling",
+        "realStrength": 99,
+        "specials": [
+          "В2"
+        ],
+        "selectedStats": {
+          "scope": {
+            "sort": 3,
+            "label": "по чемпионату",
+            "season": 79
+          },
+          "averageRating": 4.9,
+          "games": 1,
+          "goals": 0,
+          "assists": 0,
+          "yellowCards": 0,
+          "redCards": 0
+        }
+      },
+      {
+        "id": "102",
+        "name": "Player 102",
+        "country": "Country A",
+        "position": "LD/LM",
+        "age": 27,
+        "strength": 87,
+        "fatigue": 0,
+        "form": 112,
+        "formTrend": "falling",
+        "realStrength": 97,
+        "specials": [
+          "Пк"
+        ],
+        "selectedStats": {
+          "scope": {
+            "sort": 3,
+            "label": "по чемпионату",
+            "season": 79
+          },
+          "averageRating": 4.83,
+          "games": 3,
+          "goals": 0,
+          "assists": 0,
+          "yellowCards": 2,
+          "redCards": 0
+        }
+      }
+    ]
+  },
+  "rosterSeasonStats": {
+    "scope": {
+      "label": "по всем турнирам",
+      "season": 79,
+      "sort": 300
+    },
+    "players": [
+      {
+        "averageRating": 4.79,
+        "games": 12,
+        "goals": 0,
+        "assists": 0,
+        "yellowCards": 0,
+        "redCards": 0,
+        "playerId": "100"
+      },
+      {
+        "averageRating": 3.7,
+        "games": 2,
+        "goals": 0,
+        "assists": 0,
+        "yellowCards": 0,
+        "redCards": 0,
+        "playerId": "101"
+      },
+      {
+        "averageRating": 5.1,
+        "games": 8,
+        "goals": 0,
+        "assists": 0,
+        "yellowCards": 4,
+        "redCards": 0,
+        "playerId": "102"
+      }
+    ]
+  },
+  "playerDetails": [
+    {
+      "playerId": "100",
+      "position": "GK",
+      "age": 22,
+      "strength": 126,
+      "fatigue": 4,
+      "form": 75,
+      "realStrength": 97,
+      "specials": [
+        "В4",
+        "Р4",
+        "Ат4",
+        "Ка3"
+      ],
+      "info": {
+        "fatigue": 4,
+        "form": 75,
+        "formTrend": "rising",
+        "realStrength": 97,
+        "usefulness": {
+          "percent": 89,
+          "minutes": 1127,
+          "targetMinutes": 1260
+        },
+        "style": "Бразильский",
+        "seasonMinutes": 1127,
+        "playerId": "100",
+        "salaryPerTour": 1000,
+        "value": 100000
+      }
+    },
+    {
+      "playerId": "101",
+      "position": "GK",
+      "age": 24,
+      "strength": 79,
+      "fatigue": 0,
+      "form": 125,
+      "realStrength": 99,
+      "specials": [
+        "В2"
+      ],
+      "info": {
+        "fatigue": 0,
+        "form": 125,
+        "formTrend": "falling",
+        "realStrength": 99,
+        "usefulness": {
+          "percent": 15,
+          "minutes": 188,
+          "targetMinutes": 1260
+        },
+        "style": "Бразильский",
+        "seasonMinutes": 188,
+        "playerId": "101",
+        "salaryPerTour": 1000,
+        "value": 100000
+      }
+    },
+    {
+      "playerId": "102",
+      "position": "LD/LM",
+      "age": 27,
+      "strength": 87,
+      "fatigue": 0,
+      "form": 112,
+      "realStrength": 97,
+      "specials": [
+        "Пк"
+      ],
+      "info": {
+        "fatigue": 0,
+        "form": 112,
+        "formTrend": "falling",
+        "realStrength": 97,
+        "usefulness": {
+          "percent": 35,
+          "minutes": 442,
+          "targetMinutes": 1260
+        },
+        "style": "Спартаковский",
+        "seasonMinutes": 442,
+        "playerId": "102",
+        "salaryPerTour": 1000,
+        "value": 100000
+      }
+    }
+  ]
+}

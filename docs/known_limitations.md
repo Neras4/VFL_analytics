@@ -1,4 +1,4 @@
-# Known limitations v0.2.2
+# Known limitations v0.2.3 Phase 1
 
 Полная сила генератора UNKNOWN: порядок и базы сочетания всех опубликованных
 компонентов не установлены. Точные отдельные коэффициенты не подтверждают
@@ -32,8 +32,9 @@ non-dominated варианты, это явно отмечается. Эврис
 силе. При100/CLOUDY20 значение99; идеальная температура15°C согласует это
 с полным текстом page40. Внутренняя точность/округление табличных клеток не опубликованы.
 
-Нет реальных Normal/Deep export acceptance или OBSERVED match backtesting.
-Synthetic contracts не доказывают работу на данных конкретных клубов.
+Проверены реальные Normal/Deep одной пары клубов: 21 own и 27 opponent.
+OBSERVED означает структуру и импорт; сопоставления с генератором и match backtesting нет.
+Другие команды/версии коллектора не считаются проверенными автоматически.
 Сыгранность требует всех участников, same-season latest-first competitive history;
 compact recentMatches text её не заменяет. Неполная история даёт bounds/UNKNOWN.
 
@@ -50,3 +51,12 @@ AUD-10/11/12/16 отложены: calibration, predictive uncertainty, collision
 CI checkpoint A проверен на Python3.11/3.12. Финальные remote checks и PR
 проверяются только после фактической публикации; локальные tests/benchmark
 и инфраструктурные ошибки перечислены в v0.2.2_changes.md.
+
+
+Review D–F: 27 opponent fatigue observations recovered from supported same-collection
+profiles; exact profile timestamps are absent, and form remains unknown. One own
+favorite style verified by completed 5/5 study. All seven team styles are compared
+before top_n with conditional explanations. Compact reports do not duplicate raw
+snapshots; --detailed and --raw-diagnostics are explicit local options. Raw null/value
+differences are not automatically unresolved numeric conflicts. No new full-force
+or outcome calibration claim follows from these fixes.
