@@ -46,8 +46,10 @@ def merge_team_snapshots(snapshots):
     def overlay(target, incoming, path, source):
         for key, value in incoming.items():
             at = f'{path}.{key}' if path else key
-            if isinstance(value, dict) and isinstance(target.get(key), dict):
+            if isinstance(value, dict) and (key not in target or isinstance(target.get(key), dict)) and key not in ('rosterSeasonStats','selectedStats','scope'):
+                target.setdefault(key,{})
                 overlay(target[key], value, at, source)
+                provenance[at]=source
             else:
                 if key in target and target[key] != value:
                     conflicts.append({'path': at, 'previous_source': provenance.get(at),

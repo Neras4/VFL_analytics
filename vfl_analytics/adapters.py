@@ -110,9 +110,11 @@ def adapt_roster(snapshot):
                 raise ValueError('contract.current must be object or null')
             provenance={}; conflicts=[]
             # A present roster key, including null, always wins over profile copies.
-            def field(key, alternate=None):
+            def field(key, alternate=None, alternate_source=None):
                 candidates=[(label,source[key]) for label,source in
                             [('roster',row),('playerDetails',detail),('playerDetails.info',info)] if key in source]
+                if alternate_source is not None:
+                    candidates.append((alternate_source,alternate))
                 if not candidates:
                     return alternate
                 provenance[key]={'source':candidates[0][0],'value':candidates[0][1]}
@@ -153,7 +155,8 @@ def adapt_roster(snapshot):
                      nationality=row.get('country',row.get('nationality')),
                      specials=specials,specials_known=specials_known,available=row.get('available'),
                      value=_optional_num(field('value')),
-                     salary_per_tour=_optional_num(field('salaryPerTour',current_contract.get('salaryPerTour'))),
+                     salary_per_tour=_optional_num(field('salaryPerTour',current_contract.get('salaryPerTour'),
+                         'contract.current' if 'salaryPerTour' in current_contract else None)),
                      played_minutes=_optional_num(minutes),is_league_player=row.get('isLeaguePlayer',False))
             players.append(p)
             if fatigue is None or form is None:

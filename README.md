@@ -1,4 +1,4 @@
-# VFL Analytics Engine v0.2.2
+# VFL Analytics Engine v0.2.3
 
 Расширяемое математическое ядро VFL с явной неопределённостью. Использует
 опубликованные таблицы и проверенные отдельные компоненты; полная сила
@@ -34,7 +34,7 @@ Linux/macOS: `.venv/bin/python`. Расчёты и CI работают офла�
 | evaluate_player | PlayerEvaluation со всеми компонентами | ESTIMATED/BOUNDED partial, UNKNOWN full force |
 | lineup | Быстрый поиск и сравнение кандидатов | Эвристика; known_components / conservative / pareto |
 | transfer | Сохранение прежнего состава, сравнимый search delta | ESTIMATED известной части; UNKNOWN полный эффект/ROI |
-| adapt | Контракт Assistant0.5.11, joins и null-семантика | SYNTHETIC golden fixtures; настоящие экспорты ещё не проверены |
+| adapt | Контракт Assistant0.5.11, joins и null-семантика | OBSERVED structural fixtures; 21 own + 27 opponent приняты без потерь |
 | opponent / strategy | Прежняя модель стилей и явные collision scenarios | Непроверенные статистические предположения |
 | collision / usefulness | Направление коллизии и сезонные границы минут | Опубликованные отдельные правила |
 | validate_rules | SHA256, версии, структуры упакованных таблиц | Офлайн-проверка целостности |
@@ -64,7 +64,8 @@ EXACT, BOUNDED, ESTIMATED, UNKNOWN, NOT_APPLICABLE сохраняются чер
 Pareto и lower-bound режимы относятся к этой модели. Глобальный нелинейный
 оптимум и окончательная рекомендация не заявляются.
 
-Normal/Deep реальные экспорты и исторические матчи принадлежат v0.2.3.
+Normal/Deep Assistant 0.5.11 проверены на девяти локальных снимках от 14.10.2026.
+Это проверка импорта и отдельных компонентов; историческое сопоставление с генератором не выполнено.
 VFL Assistant не изменён; модель не входит на сайт, не отправляет составы
 и не выполняет трансферы.
 
@@ -97,3 +98,26 @@ Research manifest проверен:30/30. Все21 таблицы спецвоз
 
 SPEC_RU.md и v0.2.1 baseline сохраняют исторический контекст, а актуальный
 rules_registry.json и package data отражают реализованные v0.2.2 компоненты.
+
+## Реальные выгрузки v0.2.3 Phase 1
+
+Исходные JSON храните в исключённом из Git `local_data/kariari/`.
+Воспроизводимый офлайн-анализ (подробный результат содержит приватные данные):
+
+```bash
+python -m vfl_analytics.local_validation local_data/kariari --output local_data/reports/v0.2.3
+```
+
+Выход: `validation.json`, `inventory.md`; консоль содержит только агрегаты.
+CLI `merge_snapshots` принимает массив team snapshots и сохраняет provenance;
+`adapt_market` проверяет отдельный market/bids snapshot, без модели полезности.
+Пары Normal/Deep объединяются по времени и ID, club sections не теряются.
+Снимки заявок остаются независимыми наблюдениями.
+
+[Инвентаризация](docs/validation/kariari_inventory.md),
+[адаптер](docs/validation/kariari_adapter_report.md),
+[правила](docs/validation/kariari_rules_report.md),
+[составы](docs/validation/kariari_lineup_report.md),
+[рынок и заявки](docs/validation/market_bids_report.md),
+[пробелы](docs/validation/kariari_data_gaps.md),
+[изменения Phase 1](docs/v0.2.3_phase1_changes.md).

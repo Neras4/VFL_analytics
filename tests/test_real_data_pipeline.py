@@ -155,3 +155,32 @@ def test_observed_multistyle_does_not_collapse_to_one_style(name):
     result=adapt_market_snapshot(fixture(name))
     assert len(result['rows'][1]['possible_styles'])>1
     assert result['rows'][1]['favorite_style_verified'] is False
+
+
+@pytest.mark.synthetic
+@pytest.mark.regression
+def test_stat_scope_is_whole_observation_not_field_union():
+    from vfl_analytics.snapshots import merge_team_snapshots
+    old,new=fixture('own_normal'),fixture('own_deep')
+    new['rosterSeasonStats']['scope']={'label':'different competition'}
+    merged=merge_team_snapshots([old,new])
+    assert merged['snapshot']['rosterSeasonStats']['scope']=={'label':'different competition'}
+    assert 'rosterSeasonStats:unverified_all_tournament_scope' in adapt_roster(merged['snapshot'])['issues']
+
+
+@pytest.mark.synthetic
+def test_salary_conflict_keeps_both_sources():
+    d=fixture('own_deep');d['playerDetails'][0]['contract']={'current':{'salaryPerTour':900}}
+    result=adapt_roster(d)
+    assert result['players'][0].salary_per_tour==1000
+    conflict=next(c for c in result['evidence_by_id']['100']['conflicts'] if c['field']=='salaryPerTour')
+    assert conflict['selected_source']=='playerDetails.info'
+    assert {x['source'] for x in conflict['observations']}=={'playerDetails.info','contract.current'}
+
+
+@pytest.mark.synthetic
+@pytest.mark.parametrize('field,value',[('nativeSort',True),('nativeSort',-1)])
+def test_bad_native_sort_rejected(field,value):
+    from vfl_analytics.market_adapter import adapt_market_snapshot
+    d=fixture('market_0');d['management']['transferMarket']['search']['sort'][field]=value
+    with pytest.raises(ValueError):adapt_market_snapshot(d)

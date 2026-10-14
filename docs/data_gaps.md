@@ -37,3 +37,6 @@ Required data not established by current exporter:
 
 Normalized callers can supply these contexts explicitly. The core never infers
 them from a stale snapshot, count of matches, singleton style label or raw text.
+
+
+v0.2.3 update: see validation/kariari_data_gaps.md and kariari_adapter_report.md for observed Normal/Deep results. Original synthetic limitations above are historical; no match-generator validation has been established.

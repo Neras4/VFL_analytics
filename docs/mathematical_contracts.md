@@ -136,3 +136,31 @@ NaN/Infinity и bool — ошибки валидации. Целые значе�
   `abstain_uncertain_lineup_strength`, без рекомендации/численной прибавки.
 - Возраст Player, капитана и сезонного расчёта — целое 16–34. Недопустимые
   значения отклоняются. Ка и база реальной позиционной силы остаются backlog.
+
+
+## v0.2.3 Phase 1 boundary additions
+
+`merge_team_snapshots` only merges equal team/kind, ordering aware timestamps.
+Latest roster membership and explicit null state win; present sections are retained,
+profiles join by stable ID. Statistical scope objects are whole observations.
+Provenance identifies input index/time/version; conflicts preserve both field
+observations in adapter evidence. Salary priority is roster → detail → info →
+contract.current fallback: current collector observation wins, conflicting contract
+copies stay in evidence. No minutes are inferred from games or usefulness percent.
+
+`adapt_market_snapshot` never returns Player roster members. possible_styles stays
+a set of alternatives, missing form remains null, requested/applied sort separate.
+Search completeness is distinct from successful row normalization. Bid snapshots
+are independent timestamped states; price and purchase limits remain observations.
+
+PositionPlan links are undirected, no self-links, nonexistent endpoints or duplicate
+reverse pairs. External style_position_multipliers optionally accept per-style
+style_position_provenance {source, rule_version, verification_status, unit}.
+unit=multiplier; verification_status=UNVERIFIED or VERIFIED_BY_CALLER. All external
+factors remain ESTIMATED research scenarios, distinct from official qualitative
+style-position categories. Legacy numeric callers retain support with explicit
+UNVERIFIED/UNKNOWN metadata. Malformed links now consistently raise ValueError.
+
+API additions: adapter accepted/rejected/error_count/warning_count; raw source
+observations in evidence_by_id are private when fed private exports. Do not publish
+unfiltered CLI adapt/merge outputs. Existing normalized Player fields unchanged.
