@@ -1,0 +1,99 @@
+{
+  "kind": "vfl-opponent-context",
+  "depth": "normal",
+  "generatedAt": "2026-10-14T15:56:59.661Z",
+  "exporterVersion": "0.5.11",
+  "opponentId": "2",
+  "roster": {
+    "players": [
+      {
+        "id": "100",
+        "name": "Player 100",
+        "country": "Country A",
+        "position": "LM/LD",
+        "age": 33,
+        "strength": 106,
+        "fatigue": null,
+        "form": null,
+        "formTrend": null,
+        "realStrength": 98,
+        "specials": [
+          "Ат4",
+          "Д4",
+          "Пк4",
+          "Км3"
+        ],
+        "selectedStats": {
+          "scope": {
+            "sort": 3,
+            "label": "по чемпионату",
+            "season": 79
+          },
+          "averageRating": 6.35,
+          "games": 4,
+          "goals": 2,
+          "assists": 1,
+          "yellowCards": 0,
+          "redCards": 0
+        }
+      },
+      {
+        "id": "101",
+        "name": "Player 101",
+        "country": "Country A",
+        "position": "CM/CF",
+        "age": 30,
+        "strength": 77,
+        "fatigue": null,
+        "form": null,
+        "formTrend": null,
+        "realStrength": 58,
+        "specials": [
+          "Д",
+          "У2"
+        ],
+        "selectedStats": {
+          "scope": {
+            "sort": 3,
+            "label": "по чемпионату",
+            "season": 79
+          },
+          "averageRating": 6.15,
+          "games": 4,
+          "goals": 1,
+          "assists": 2,
+          "yellowCards": 0,
+          "redCards": 0
+        }
+      },
+      {
+        "id": "102",
+        "name": "Player 102",
+        "country": "Country A",
+        "position": "RD/RM",
+        "age": 31,
+        "strength": 79,
+        "fatigue": null,
+        "form": null,
+        "formTrend": null,
+        "realStrength": 77,
+        "specials": [
+          "И"
+        ],
+        "selectedStats": {
+          "scope": {
+            "sort": 3,
+            "label": "по чемпионату",
+            "season": 79
+          },
+          "averageRating": 6.1,
+          "games": 3,
+          "goals": 0,
+          "assists": 0,
+          "yellowCards": 1,
+          "redCards": 0
+        }
+      }
+    ]
+  }
+}

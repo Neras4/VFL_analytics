@@ -1,0 +1,51 @@
+{
+  "kind": "vfl-transfer-bids",
+  "exporterVersion": "0.5.11",
+  "generatedAt": "2026-10-14T15:58:46.968Z",
+  "management": {
+    "transferMarket": {
+      "myBids": {
+        "collectedAt": "2026-10-14T15:58:46.972Z",
+        "purchaseLimits": {
+          "total": 5,
+          "GK": 1,
+          "LD": 5,
+          "CD": 5,
+          "RD": 5,
+          "LM": 5,
+          "CM": 5,
+          "RM": 5,
+          "LF": 5,
+          "CF": 5,
+          "RF": 5
+        },
+        "bids": [
+          {
+            "position": "GK",
+            "age": 30,
+            "strength": 121,
+            "fatigue": 0,
+            "form": 125,
+            "specials": "Ат В2 Р",
+            "style": {
+              "id": 1,
+              "label": "Спартаковский",
+              "possibleStyles": [
+                {
+                  "id": 1,
+                  "label": "Спартаковский"
+                }
+              ],
+              "raw": "Спартаковский"
+            },
+            "bidsCount": 11,
+            "bidType": "active",
+            "playerId": "300",
+            "playerName": "Bid player",
+            "bidPrice": 100000
+          }
+        ]
+      }
+    }
+  }
+}

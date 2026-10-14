@@ -1,0 +1,189 @@
+{
+  "kind": "vfl-opponent-context",
+  "depth": "deep",
+  "generatedAt": "2026-10-14T15:57:06.105Z",
+  "exporterVersion": "0.5.11",
+  "opponentId": "2",
+  "roster": {
+    "players": [
+      {
+        "id": "100",
+        "name": "Player 100",
+        "country": "Country A",
+        "position": "LM/LD",
+        "age": 33,
+        "strength": 106,
+        "fatigue": null,
+        "form": null,
+        "formTrend": null,
+        "realStrength": 98,
+        "specials": [
+          "Ат4",
+          "Д4",
+          "Пк4",
+          "Км3"
+        ],
+        "selectedStats": {
+          "scope": {
+            "sort": 3,
+            "label": "по чемпионату",
+            "season": 79
+          },
+          "averageRating": 6.35,
+          "games": 4,
+          "goals": 2,
+          "assists": 1,
+          "yellowCards": 0,
+          "redCards": 0
+        }
+      },
+      {
+        "id": "101",
+        "name": "Player 101",
+        "country": "Country A",
+        "position": "CM/CF",
+        "age": 30,
+        "strength": 77,
+        "fatigue": null,
+        "form": null,
+        "formTrend": null,
+        "realStrength": 58,
+        "specials": [
+          "Д",
+          "У2"
+        ],
+        "selectedStats": {
+          "scope": {
+            "sort": 3,
+            "label": "по чемпионату",
+            "season": 79
+          },
+          "averageRating": 6.15,
+          "games": 4,
+          "goals": 1,
+          "assists": 2,
+          "yellowCards": 0,
+          "redCards": 0
+        }
+      },
+      {
+        "id": "102",
+        "name": "Player 102",
+        "country": "Country A",
+        "position": "RD/RM",
+        "age": 31,
+        "strength": 79,
+        "fatigue": null,
+        "form": null,
+        "formTrend": null,
+        "realStrength": 77,
+        "specials": [
+          "И"
+        ],
+        "selectedStats": {
+          "scope": {
+            "sort": 3,
+            "label": "по чемпионату",
+            "season": 79
+          },
+          "averageRating": 6.1,
+          "games": 3,
+          "goals": 0,
+          "assists": 0,
+          "yellowCards": 1,
+          "redCards": 0
+        }
+      }
+    ]
+  },
+  "playerDetails": [
+    {
+      "playerId": "100",
+      "position": "LM/LD",
+      "age": 33,
+      "strength": 106,
+      "fatigue": null,
+      "form": null,
+      "realStrength": 98,
+      "specials": [
+        "Ат4",
+        "Д4",
+        "Пк4",
+        "Км3"
+      ],
+      "info": {
+        "fatigue": 12,
+        "form": null,
+        "formTrend": null,
+        "realStrength": null,
+        "usefulness": {
+          "percent": 95,
+          "minutes": 1198,
+          "targetMinutes": 1260
+        },
+        "style": "Неизвестно",
+        "seasonMinutes": 1198,
+        "playerId": "100",
+        "salaryPerTour": 1000,
+        "value": 100000
+      }
+    },
+    {
+      "playerId": "101",
+      "position": "CM/CF",
+      "age": 30,
+      "strength": 77,
+      "fatigue": null,
+      "form": null,
+      "realStrength": 58,
+      "specials": [
+        "Д",
+        "У2"
+      ],
+      "info": {
+        "fatigue": 25,
+        "form": null,
+        "formTrend": null,
+        "realStrength": null,
+        "usefulness": {
+          "percent": 84,
+          "minutes": 1061,
+          "targetMinutes": 1260
+        },
+        "style": "Неизвестно",
+        "seasonMinutes": 1061,
+        "playerId": "101",
+        "salaryPerTour": 1000,
+        "value": 100000
+      }
+    },
+    {
+      "playerId": "102",
+      "position": "RD/RM",
+      "age": 31,
+      "strength": 79,
+      "fatigue": null,
+      "form": null,
+      "realStrength": 77,
+      "specials": [
+        "И"
+      ],
+      "info": {
+        "fatigue": 5,
+        "form": null,
+        "formTrend": null,
+        "realStrength": null,
+        "usefulness": {
+          "percent": 74,
+          "minutes": 928,
+          "targetMinutes": 1260
+        },
+        "style": "Неизвестно",
+        "seasonMinutes": 928,
+        "playerId": "102",
+        "salaryPerTour": 1000,
+        "value": 100000
+      }
+    }
+  ]
+}

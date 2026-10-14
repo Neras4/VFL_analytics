@@ -1,4 +1,4 @@
-"""Static Assistant boundary. Synthetic fixtures are not observed-export acceptance."""
+"""Assistant boundary with local row errors and explicit source evidence."""
 import math
 import re
 from .models import Player, STYLE_ALIASES
@@ -73,14 +73,18 @@ def adapt_roster(snapshot):
     season_by_id={}
     if season is not None:
         if not isinstance(season,dict) or not isinstance(season.get('players'),list):
-            raise ValueError('rosterSeasonStats must contain players list')
+            issues.append('rosterSeasonStats:invalid:expected object with players list')
+            season=None
+    if season is not None:
         scope=season.get('scope') or {}
-        if scope.get('sort')!=300 or scope.get('label')!='по всем турнирам':
+        if not isinstance(scope,dict) or scope.get('sort')!=300 or scope.get('label')!='по всем турнирам':
             issues.append('rosterSeasonStats:unverified_all_tournament_scope')
+        ambiguous_season=set()
         for record in season['players']:
             try:
                 sid=_id(record)
-                if sid in season_by_id:
+                if sid in season_by_id or sid in ambiguous_season:
+                    ambiguous_season.add(sid);season_by_id.pop(sid,None)
                     raise ValueError('Duplicate season-stat player ID')
                 season_by_id[sid]=record
             except (ValueError,TypeError,AttributeError) as exc:
@@ -101,13 +105,20 @@ def adapt_roster(snapshot):
             info=detail.get('info') or {}
             contract=detail.get('contract') or {}
             current_contract=contract.get('current') or {}
+            if not isinstance(current_contract,dict):
+                raise ValueError('contract.current must be object or null')
+            provenance={}; conflicts=[]
             # A present roster key, including null, always wins over profile copies.
             def field(key, alternate=None):
-                if key in row:
-                    return row[key]
-                if key in detail:
-                    return detail[key]
-                return info.get(key) if alternate is None else alternate
+                candidates=[(label,source[key]) for label,source in
+                            [('roster',row),('playerDetails',detail),('playerDetails.info',info)] if key in source]
+                if not candidates:
+                    return alternate
+                provenance[key]={'source':candidates[0][0],'value':candidates[0][1]}
+                if any(value!=candidates[0][1] for _,value in candidates[1:]):
+                    conflicts.append({'field':key,'selected_source':candidates[0][0],
+                                      'observations':[{'source':label,'value':value} for label,value in candidates]})
+                return candidates[0][1]
             age=_optional_num(field('age')); strength=_optional_num(field('strength'))
             if age is None or strength is None or not row.get('name') or not _positions(row):
                 issues.append(f'{prefix}:missing_id_name_age_strength_or_position')
@@ -117,6 +128,8 @@ def adapt_roster(snapshot):
             favorite=row.get('favoriteStyle',row.get('favorite_style',info.get('style')))
             if isinstance(favorite,dict):
                 favorite=favorite.get('label',favorite.get('name'))
+            if isinstance(favorite,str) and favorite.strip().casefold() in ('неизвестно','unknown','?','—',''):
+                favorite=None
             if favorite is not None and (not isinstance(favorite,str) or favorite.strip().casefold() not in STYLE_ALIASES):
                 issues.append(f'{prefix}:unverified_favorite_style')
                 favorite=None
@@ -147,13 +160,20 @@ def adapt_roster(snapshot):
             evidence[sid]={'selectedStats':row.get('selectedStats'),
                           'rosterSeasonStats':season_by_id.get(sid),
                           'rosterSeasonStatsScope':None if season is None else season.get('scope'),
-                          'contract':contract or None,'formTrend':row.get('formTrend'),
+                          'contract':contract or None,'formTrend':field('formTrend'),
                           'recentMatches':info.get('recentMatches'),
+                          'profileStats':detail.get('stats'),
+                          'source_values':{'roster':row,'detail':detail},
+                          'field_provenance':provenance,'conflicts':conflicts,
+                          'raw_style':info.get('style'),
+                          'availability_status':'UNKNOWN' if p.available is None else ('AVAILABLE' if p.available else 'UNAVAILABLE'),
                           'style_label_is_not_verification':True}
         except (ValueError,TypeError) as exc:
             issues.append(f'{prefix}:invalid:{exc}')
     for sid in sorted(set(by_id)-seen):
         issues.append(f'orphan_player_details:{sid}')
-    return {'players':players,'issues':issues,'accepted':len(players),'total':len(rows),
+    errors=[x for x in issues if ':invalid:' in x or 'missing_id_name_age_strength_or_position' in x]
+    return {'players':players,'issues':issues,'accepted':len(players),'rejected':len(rows)-len(players),'total':len(rows),
+            'error_count':len(errors),'warning_count':len(issues)-len(errors),
             'evidence_by_id':evidence,
-            'note':'Static Assistant source contract + SYNTHETIC fixtures; real Normal/Deep acceptance deferred to v0.2.3'}
+            'note':'Normalized observations; text style labels do not prove study; no inferred availability'}

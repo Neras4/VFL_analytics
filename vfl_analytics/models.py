@@ -150,6 +150,7 @@ class PositionPlan:
     defense_formation: str | None = None  # 'line' or 'sweeper'; explicit tactical context.
     formation_base_slots: tuple[str,...] | None = None
     tactical_permissions: dict[str,bool|None] = field(default_factory=dict)
+    style_position_provenance: dict[str,dict] = field(default_factory=dict)
 
     def __post_init__(self):
         if not isinstance(self.slots,(tuple,list)) or any(not isinstance(s,str) for s in self.slots):
@@ -160,20 +161,40 @@ class PositionPlan:
             raise ValueError("Exactly 11 slots including one GK required")
         if len(set(self.slots)) != 11:
             raise ValueError("Slot names must be distinct, e.g. CD1, CD2")
+        if not isinstance(self.style_position_multipliers,dict) or not isinstance(self.style_position_provenance,dict):
+            raise ValueError('External factors and provenance must be mappings')
+        normalized={}
         for style, factors in self.style_position_multipliers.items():
-            style_id(style)
+            canonical=style_id(style)
+            if canonical is None or canonical in normalized:
+                raise ValueError('Missing or duplicate external factor style')
+            normalized[canonical]=factors
             if not isinstance(factors,dict):
                 raise ValueError('Position factors must be mappings')
             for slot,x in factors.items():
                 if slot not in self.slots and slot not in NATIVE_POSITIONS | SPECIAL_POSITIONS:
                     raise ValueError('Factor for unknown slot')
                 number(x,'position factor',positive=True,maximum=2)
+        object.__setattr__(self,'style_position_multipliers',normalized)
+        provenance={}
+        for style,entry in self.style_position_provenance.items():
+            canonical=style_id(style)
+            if canonical not in normalized or canonical in provenance or not isinstance(entry,dict):
+                raise ValueError('Provenance must refer to a unique supplied factor style')
+            if any(not isinstance(entry.get(k),str) or not entry[k].strip() for k in ('source','rule_version','verification_status','unit')):
+                raise ValueError('External factor requires source, rule_version, verification_status and unit')
+            if entry['unit']!='multiplier' or entry['verification_status'] not in ('UNVERIFIED','VERIFIED_BY_CALLER'):
+                raise ValueError('Invalid external factor units/verification status')
+            provenance[canonical]=dict(entry)
+        object.__setattr__(self,'style_position_provenance',provenance)
         if self.defense_formation not in (None,'line','sweeper'):
             raise ValueError('Unknown defense formation')
         if self.defense_formation=='line' and any(base_position(s)=='SW' for s in self.slots):
             raise ValueError('SW conflicts with defense line')
+        if not isinstance(self.links,(list,tuple)):
+            raise ValueError('Chemistry links must be a sequence')
         for link in self.links:
-            if len(link)!=2 or link[0] not in self.slots or link[1] not in self.slots or link[0]==link[1]:
+            if not isinstance(link,(tuple,list)) or len(link)!=2 or any(not isinstance(s,str) for s in link) or link[0] not in self.slots or link[1] not in self.slots or link[0]==link[1]:
                 raise ValueError('Invalid chemistry link')
         if len({frozenset(x) for x in self.links})!=len(self.links):
             raise ValueError('Duplicate chemistry link')

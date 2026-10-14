@@ -9,6 +9,8 @@ from .rules import collision, youth_growth, defense_choice
 from .season import plan_usefulness
 from .transfers import evaluate_purchase
 from .adapters import adapt_roster
+from .snapshots import merge_team_snapshots
+from .market_adapter import adapt_market_snapshot
 from .decision import compare_styles
 from .evaluation import evaluate_player
 from .positions import position_modifier,style_position_category
@@ -32,13 +34,19 @@ def plans_from(rows):
     return [PositionPlan(tuple(x["slots"]),x.get("style_position_multipliers",{}),
                          tuple(tuple(y) for y in x.get("links",[])),x.get('defense_formation'),
                          tuple(x['formation_base_slots']) if x.get('formation_base_slots') is not None else None,
-                         x.get('tactical_permissions',{})) for x in rows]
+                         x.get('tactical_permissions',{}),x.get('style_position_provenance',{})) for x in rows]
 
 
 def run_request(obj:dict)->dict:
     if not isinstance(obj,dict):
         raise ValueError('CLI request must be an object')
     op = obj.get("action")
+    if op=='adapt_market':
+        return adapt_market_snapshot(obj['snapshot'])
+    if op=='merge_snapshots':
+        merged=merge_team_snapshots(obj['snapshots'])
+        adapted=adapt_roster(merged['snapshot'])
+        return {**merged,'adapted':{**adapted,'players':[asdict(p) for p in adapted['players']]}}
     if op=='validate_rules':
         return validate_all()
     if op=='catalog':
