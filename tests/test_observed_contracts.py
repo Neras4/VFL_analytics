@@ -29,7 +29,8 @@ def test_observed_join_preserves_sections_and_ids(team,count):
         assert 'finances' in merged['snapshot'] and 'teamStatistics' in merged['snapshot']
         assert all(e['rosterSeasonStats'] for e in out['evidence_by_id'].values())
     else:
-        assert all(p.form is None and p.fatigue is None and p.favorite_style is None for p in out['players'])
+        # Review D: v0.5.11 gates roster fatigue on visible form; profile is independent.
+        assert all(p.form is None and p.fatigue is not None and p.favorite_style is None for p in out['players'])
         assert not any('unverified_favorite_style' in x for x in out['issues'])
         assert all(e['raw_style']=='Неизвестно' for e in out['evidence_by_id'].values())
 

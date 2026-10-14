@@ -61,6 +61,7 @@ def merge_team_snapshots(snapshots):
     sources = []
     for _, index, snap in ordered:
         source = {'input_index': index, 'generatedAt': snap['generatedAt'],
+                  'snapshot_id':snap.get('_snapshot_id'),
                   'depth': snap.get('depth'), 'exporterVersion': snap.get('exporterVersion')}
         sources.append(source)
         overlay(result, {k:v for k,v in snap.items() if k not in ('playerDetails', 'roster')}, '', source)
@@ -87,6 +88,7 @@ def merge_team_snapshots(snapshots):
                 continue
             overlay(details.setdefault(sid, {}), row, f'playerDetails[{sid}]', source)
     result['playerDetails'] = list(details.values())
+    result['_source_provenance']=deepcopy(provenance)
     return {'snapshot': result, 'provenance': provenance, 'conflicts': conflicts,
             'issues': diagnostics, 'sources': sources,
             'effective_sections':sorted(result),

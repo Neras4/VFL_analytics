@@ -3,6 +3,7 @@ import math
 import re
 from .models import Player, STYLE_ALIASES
 from .validation import identity,ABILITY_CODES
+from .source_evidence import fatigue_observation, scouting_style
 
 
 def _optional_num(value):
@@ -139,7 +140,13 @@ def adapt_roster(snapshot):
             known=_optional_num(row.get('styleKnownPercent',row.get('style_known_percent')))
             if known is not None and known!=int(known):
                 raise ValueError('Fractional style study percentage')
-            fatigue=_optional_num(field('fatigue')); form=_optional_num(field('form'))
+            field('fatigue')  # Retain raw disagreement evidence independently of selection.
+            fatigue_evidence=fatigue_observation(snapshot,row,detail,info,sid)
+            fatigue=_optional_num(fatigue_evidence['value']); form=_optional_num(field('form'))
+            provenance['fatigue']=fatigue_evidence
+            study=scouting_style(snapshot,sid,favorite,known)
+            known=study['percent']
+            issues.extend(f'{prefix}:{issue}' for issue in study['issues'])
             specials=row.get('specials',detail.get('specials',[]))
             specials_known=specials is not None and ('specials' in row or 'specials' in detail)
             if specials is None:
@@ -152,6 +159,7 @@ def adapt_roster(snapshot):
             p=Player(id=sid,name=row['name'],positions=_positions(row),age=int(age),strength=strength,
                      fatigue=fatigue,form=form,real_strength=_optional_num(field('realStrength')),
                      favorite_style=favorite,style_known_percent=None if known is None else int(known),
+                     favorite_style_verified=study['verified'],
                      nationality=row.get('country',row.get('nationality')),
                      specials=specials,specials_known=specials_known,available=row.get('available'),
                      value=_optional_num(field('value')),
@@ -172,6 +180,7 @@ def adapt_roster(snapshot):
                           'profileStats':detail.get('stats'),
                           'source_values':{'roster':row,'detail':detail},
                           'field_provenance':provenance,'conflicts':conflicts,
+                          'scouting':study,
                           'raw_style':info.get('style'),
                           'availability_status':'UNKNOWN' if p.available is None else ('AVAILABLE' if p.available else 'UNAVAILABLE'),
                           'style_label_is_not_verification':True}

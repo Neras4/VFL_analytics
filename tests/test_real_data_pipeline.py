@@ -27,7 +27,8 @@ def test_observed_component_pipeline(name):
         assert c['weather']['status']=='UNKNOWN'
         assert evaluation['total_strength']['value'] is None
         if name=='opponent':
-            assert c['physical_form']['value'] is c['fatigue']['value'] is None
+            assert c['physical_form']['value'] is None
+            assert c['fatigue']['value'] is not None
     assert report['weather_scenario']['classification']=='SYNTHETIC_SCENARIO'
 
 
