@@ -51,3 +51,12 @@ AUD-10/11/12/16 отложены: calibration, predictive uncertainty, collision
 CI checkpoint A проверен на Python3.11/3.12. Финальные remote checks и PR
 проверяются только после фактической публикации; локальные tests/benchmark
 и инфраструктурные ошибки перечислены в v0.2.2_changes.md.
+
+
+Review D–F: 27 opponent fatigue observations recovered from supported same-collection
+profiles; exact profile timestamps are absent, and form remains unknown. One own
+favorite style verified by completed 5/5 study. All seven team styles are compared
+before top_n with conditional explanations. Compact reports do not duplicate raw
+snapshots; --detailed and --raw-diagnostics are explicit local options. Raw null/value
+differences are not automatically unresolved numeric conflicts. No new full-force
+or outcome calibration claim follows from these fixes.

@@ -105,7 +105,7 @@ rules_registry.json и package data отражают реализованные 
 Воспроизводимый офлайн-анализ (подробный результат содержит приватные данные):
 
 ```bash
-python -m vfl_analytics.local_validation local_data/kariari --output local_data/reports/v0.2.3
+python -m vfl_analytics.local_validation local_data/kariari --output local_data/reports/v0.2.3 --detailed
 ```
 
 Выход: `validation.json`, `inventory.md`; консоль содержит только агрегаты.
@@ -121,3 +121,10 @@ CLI `merge_snapshots` принимает массив team snapshots и сохр
 [рынок и заявки](docs/validation/market_bids_report.md),
 [пробелы](docs/validation/kariari_data_gaps.md),
 [изменения Phase 1](docs/v0.2.3_phase1_changes.md).
+
+Review D–F: all seven team styles, source-aware opponent fatigue, completed scouting,
+lineup explanations and isolated kind/ID/season groups are supported. Use
+`--team-id 13202` to filter (repeat for several IDs), `--detailed` for player and
+alternative calculations, `--raw-diagnostics` only for private debugging. Output
+must be inside this project's real `local_data/` tree. See
+[review fixes](docs/validation/phase1_review_fixes.md).

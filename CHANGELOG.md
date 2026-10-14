@@ -2,6 +2,10 @@
 
 ## 0.2.3 — 2026-10-14
 
+- Review D–F: source-aware opponent fatigue, completed scouting, seven-style comparisons and explainable alternatives.
+- Multi-team/season isolation, compact reporting and trusted output-root guard; 530-test local suite.
+
+
 - Observed Assistant 0.5.11 Normal/Deep joins with timestamp/field provenance; 21 own and 27 opponent accepted. Club sections preserved.
 - Separate Transfer Market and My Bids contract adapters; incomplete pagination and requested/applied sort preserved. No utility model or game actions.
 - Unknown-style sentinel, salary fallback, null specials and optional malformed stats localized; ambiguous scopes never merged.

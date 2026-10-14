@@ -164,8 +164,11 @@ def test_stat_scope_is_whole_observation_not_field_union():
     from vfl_analytics.snapshots import merge_team_snapshots
     old,new=fixture('own_normal'),fixture('own_deep')
     new['rosterSeasonStats']['scope']={'label':'different competition'}
+    # Review F: missing season cannot silently inherit an older current season.
+    with pytest.raises(ValueError,match='season'):merge_team_snapshots([old,new])
+    new['rosterSeasonStats']['scope']['season']=79
     merged=merge_team_snapshots([old,new])
-    assert merged['snapshot']['rosterSeasonStats']['scope']=={'label':'different competition'}
+    assert merged['snapshot']['rosterSeasonStats']['scope']=={'label':'different competition','season':79}
     assert 'rosterSeasonStats:unverified_all_tournament_scope' in adapt_roster(merged['snapshot'])['issues']
 
 

@@ -1,49 +1,25 @@
-# Lineup smoke tests — observed inputs, provisional model
+# Lineup report after review D–F
 
-Three candidate geometries × normal/Spartak/BB × known_components/conservative/pareto. Every returned assignment has 11 unique IDs and exactly one GK. Repeated runs match byte-equivalent JSON values. Availability and full formation legality remain UNKNOWN; no final recommendation.
+Checked anonymous aggregate inputs only. Detailed named comparisons remain in local lineups.md / details.json. Scores are provisional partial units; all full eligibility states remain UNKNOWN.
 
-P01…P21 are local one-to-one anonymous player labels; the private mapping is not published. All scores use partial_strength_units and exclude unresolved mechanics.
+| Style | Plans | Assignment-feasible generated | Known proxy | Conservative partial | Pareto count |
+|---|---:|---:|---:|---:|---:|
+| normal | 3 | 29 | 988.767360 | 988.767360 | 29 |
+| bb | 3 | 28 | 987.916730 | 978.879686 | 28 |
+| british | 3 | 28 | 987.916730 | 978.879686 | 28 |
+| catenaccio | 3 | 29 | 988.767360 | 979.730316 | 29 |
+| spartak | 3 | 26 | 990.893935 | 981.856891 | 26 |
+| brazil | 3 | 29 | 988.767360 | 979.730316 | 29 |
+| tiki | 3 | 29 | 988.767360 | 979.730316 | 29 |
 
-| Mode | Candidates before limit | Returned | Deterministic |
-|---|---:|---:|---|
-| known_components | 9 | 9 | True |
-| conservative | 9 | 9 | True |
-| pareto | 81 | 9 | True |
+All styles are retained before any global top_n. Generated assignment feasibility checks GK/unique IDs/position compatibility/known unavailability, not complete game legality. Conservative scores use available conditional bounds (including a point estimate when lower=null); no guarantee on final force. Unknown nonlinear axes prevent decisive Pareto dominance. Equal proxies do not imply equal effectiveness.
 
-Pareto has 81 nondominated candidates because unknown captain/cohesion axes cannot establish robust dominance; top_n=9 truncates the output. Its display order is the explicit partial proxy, not a dominance proof. Conservative mode uses the conditional lower bound where available. Opponent conservative comparisons are UNKNOWN, with diagnostic proxy ordering only.
+## Anonymous GK comparison
 
-| Mode | Style | Geometry | Partial / interval | Assignment (anonymous) |
-|---|---|---|---|---|
-| known_components | normal | 4-4-1-1 | 988.767 | GK=P02, LD=P03, CD1=P07, CD2=P06, RD=P09, LM=P04, CM1=P21, CM2=P19, RM=P10, AM=P20, CF=P17 |
-| known_components | spartak | 4-4-1-1 | [978.880, 1013.487] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, CM1=P19, CM2=P21, RM=P10, AM=P20, CF=P17 |
-| known_components | bb | 4-4-1-1 | [978.880, 1013.487] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, CM1=P19, CM2=P21, RM=P10, AM=P20, CF=P17 |
-| known_components | normal | 4-1-3-1-1 | 985.357 | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, DM=P17, CM=P21, RM=P10, AM=P20, CF=P19 |
-| known_components | spartak | 4-1-3-1-1 | [975.504, 1009.991] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, DM=P17, CM=P21, RM=P10, AM=P20, CF=P19 |
-| known_components | bb | 4-1-3-1-1 | [975.504, 1009.991] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, DM=P17, CM=P21, RM=P10, AM=P20, CF=P19 |
-| known_components | normal | 4-4-2 | 980.582 | GK=P02, LD=P03, CD1=P07, CD2=P06, RD=P09, LM=P04, CM1=P21, CM2=P20, RM=P10, CF1=P19, CF2=P17 |
-| known_components | spartak | 4-4-2 | [970.777, 1005.097] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, CM1=P20, CM2=P19, RM=P10, CF1=P21, CF2=P17 |
-| known_components | bb | 4-4-2 | [970.777, 1005.097] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, CM1=P20, CM2=P19, RM=P10, CF1=P21, CF2=P17 |
-| conservative | normal | 4-4-1-1 | 988.767 | GK=P02, LD=P03, CD1=P07, CD2=P06, RD=P09, LM=P04, CM1=P21, CM2=P19, RM=P10, AM=P20, CF=P17 |
-| conservative | normal | 4-1-3-1-1 | 985.357 | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, DM=P17, CM=P21, RM=P10, AM=P20, CF=P19 |
-| conservative | normal | 4-4-2 | 980.582 | GK=P02, LD=P03, CD1=P07, CD2=P06, RD=P09, LM=P04, CM1=P21, CM2=P20, RM=P10, CF1=P19, CF2=P17 |
-| conservative | spartak | 4-4-1-1 | [978.880, 1013.487] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, CM1=P19, CM2=P21, RM=P10, AM=P20, CF=P17 |
-| conservative | bb | 4-4-1-1 | [978.880, 1013.487] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, CM1=P19, CM2=P21, RM=P10, AM=P20, CF=P17 |
-| conservative | spartak | 4-1-3-1-1 | [975.504, 1009.991] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, DM=P17, CM=P21, RM=P10, AM=P20, CF=P19 |
-| conservative | bb | 4-1-3-1-1 | [975.504, 1009.991] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, DM=P17, CM=P21, RM=P10, AM=P20, CF=P19 |
-| conservative | spartak | 4-4-2 | [970.777, 1005.097] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, CM1=P20, CM2=P19, RM=P10, CF1=P21, CF2=P17 |
-| conservative | bb | 4-4-2 | [970.777, 1005.097] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, CM1=P20, CM2=P19, RM=P10, CF1=P21, CF2=P17 |
-| pareto | normal | 4-4-1-1 | 988.767 | GK=P02, LD=P03, CD1=P07, CD2=P06, RD=P09, LM=P04, CM1=P21, CM2=P19, RM=P10, AM=P20, CF=P17 |
-| pareto | normal | 4-4-1-1 | 988.767 | GK=P02, LD=P04, CD1=P06, CD2=P07, RD=P09, LM=P03, CM1=P17, CM2=P21, RM=P10, AM=P20, CF=P19 |
-| pareto | normal | 4-4-1-1 | 988.767 | GK=P02, LD=P03, CD1=P06, CD2=P07, RD=P09, LM=P04, CM1=P17, CM2=P21, RM=P10, AM=P20, CF=P19 |
-| pareto | normal | 4-4-1-1 | 988.767 | GK=P02, LD=P03, CD1=P06, CD2=P07, RD=P09, LM=P04, CM1=P21, CM2=P19, RM=P10, AM=P20, CF=P17 |
-| pareto | normal | 4-4-1-1 | 988.767 | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, CM1=P21, CM2=P19, RM=P10, AM=P20, CF=P17 |
-| pareto | normal | 4-4-1-1 | 988.767 | GK=P02, LD=P03, CD1=P07, CD2=P06, RD=P09, LM=P04, CM1=P19, CM2=P17, RM=P10, AM=P20, CF=P21 |
-| pareto | normal | 4-4-1-1 | 988.767 | GK=P02, LD=P03, CD1=P07, CD2=P06, RD=P09, LM=P04, CM1=P19, CM2=P21, RM=P10, AM=P20, CF=P17 |
-| pareto | normal | 4-4-1-1 | 988.767 | GK=P02, LD=P03, CD1=P07, CD2=P06, RD=P09, LM=P04, CM1=P21, CM2=P17, RM=P10, AM=P20, CF=P19 |
-| pareto | spartak | 4-4-1-1 | [978.880, 1013.487] | GK=P02, LD=P04, CD1=P07, CD2=P06, RD=P09, LM=P03, CM1=P19, CM2=P21, RM=P10, AM=P20, CF=P17 |
+GK-A: nominal 79, form 125%, fatigue 0 → proxy 98.75. GK-B: nominal 126, form 75%, fatigue 4 → proxy 90.72. Same-slot replacement delta (B−A) is −8.03. GK-B has В4/Р4/Ат4/Ка3, so the proxy result does not prove A is the better real match keeper. Isolated specialty components and unknown captain force bases are shown separately; no invented specialty total.
 
-Normal leading candidate: estimated subtotal 988.767. Same proxy under Spartak/BB yields a conditional [978.880, 1013.487] interval, with partial_total=null. These ties arise from missing study evidence and omitted effects; they do not establish style equivalence in the game.
+## Anonymous AM / CF comparison
 
-For all candidates: known positional/form/fatigue components are reported; style ability coefficients are separate. The search proxy does not stack those ability coefficients into its total, because the full modifier order/base is unresolved. Captain/И/Л absolute deltas, chemistry, cohesion and target weather are UNKNOWN. Special CM→DM/AM context is unverified. All eligibility statuses remain UNKNOWN, even when linear assignment constraints pass.
+F-A (CF/CM): nominal 168, form 112%, fatigue 13 gives 163.6992 at CF, 171.88416 at AM (position factor 1.05). F-B (CM/CF): nominal 97, form 79%, fatigue 11 gives 68.2007 at CF and 71.610735 at AM. Same-geometry swap from A@AM+B@CF to B@AM+A@CF changes the conditional proxy by −4.774925. This explains the partial preference without declaring an official optimal assignment. Both players have native dual roles; AM legality still needs tactical context.
 
-Own/opponent smoke: 21 vs 27 normalized players, no player losses; opponent physical state unknown for all 27. No W/D/L probabilities, game actions or definitive match recommendation.
+Every explanation preserves the alternative assignment and shows inputs, factors, omitted mechanics, conditional delta bounds and full_preference_status=UNKNOWN. Unknown cohesion/chemistry/special stacking may reverse close partial comparisons; their magnitude is not invented. No special rule forces a named player into a slot.

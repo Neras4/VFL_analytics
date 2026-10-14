@@ -81,7 +81,9 @@ def scouting_style(snapshot,sid,favorite,explicit_percent):
     result={'percent':explicit_percent,'verified':False,'source':'roster' if explicit_percent is not None else None,
             'status':'UNKNOWN','issues':[],'rule_source':SCOUT_SOURCE,'history':[]}
     if not isinstance(scouting,dict) or snapshot.get('kind')!='vfl-own-team-context':return result
-    season=((snapshot.get('rosterSeasonStats') or {}).get('scope') or {}).get('season')
+    season_stats=snapshot.get('rosterSeasonStats')
+    scope=season_stats.get('scope') if isinstance(season_stats,dict) else None
+    season=scope.get('season') if isinstance(scope,dict) else None
     if season is None or scouting.get('season')!=season:
         result['issues'].append('scouting:unverified_season');return result
     reference=timestamp(snapshot.get('generatedAt'));records=scouting.get('completed',[])
@@ -93,7 +95,9 @@ def scouting_style(snapshot,sid,favorite,explicit_percent):
             if identity(record.get('playerId'),collector=True)!=sid:continue
         except ValueError:continue
         if str(record.get('studyType','')).strip().casefold()!='стиль':continue
-        when=study_date(record.get('date'));level=(record.get('result') or {}).get('level');maxlevel=(record.get('result') or {}).get('maxLevel')
+        entry=record.get('result')
+        if not isinstance(entry,dict):result['issues'].append('scouting:invalid_style_result');continue
+        when=study_date(record.get('date'));level=entry.get('level');maxlevel=entry.get('maxLevel')
         if not when or not reference or when>reference.date() or record.get('season',season)!=season:
             result['issues'].append('scouting:invalid_future_or_season_date');continue
         if isinstance(level,bool) or not isinstance(level,int) or not 1<=level<=5 or type(maxlevel) is not int or maxlevel!=5:

@@ -17,3 +17,13 @@ collector version, UTC timestamps and competition scopes. Run the same local
 validation command, compare joins/unknown counts, and add minimized anonymized
 fixtures for new structural cases. Do not infer their current state from this
 team. Match outcome training and broad backtesting remain separate future work.
+
+
+## Review D–F update
+
+Opponent fatigue is available from independent profile observations (27/27);
+remaining physical gap is form (27 unknown) and exact per-player collection time.
+One own favorite style is verified by completed scouting; 20 still lack study evidence.
+Seven styles and same-geometry alternatives are now covered. Multiple clubs/seasons
+are isolated; synthetic tests for additional club IDs do not validate their real data.
+The compact report uses snapshot hashes/time/version references; raw debugging is optional.

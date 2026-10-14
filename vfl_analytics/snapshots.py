@@ -16,6 +16,19 @@ def collection_time(value):
     return result
 
 
+def snapshot_season(snapshot):
+    """Current aggregate/management seasons only; selectedStats may be historic."""
+    seasons=set()
+    season=((snapshot.get('rosterSeasonStats') or {}).get('scope') or {}).get('season')
+    if season is not None:seasons.add(season)
+    management=snapshot.get('management') or {}
+    for section in management.values() if isinstance(management,dict) else []:
+        if isinstance(section,dict) and section.get('season') is not None:seasons.add(section['season'])
+    if any(type(s) is not int or s<1 for s in seasons) or len(seasons)>1:
+        raise ValueError('Conflicting or invalid current snapshot seasons')
+    return next(iter(seasons),None)
+
+
 def merge_team_snapshots(snapshots):
     """Latest roster defines membership/state; missing sections survive older snapshots.
 
@@ -37,6 +50,9 @@ def merge_team_snapshots(snapshots):
         ordered.append((collection_time(snap.get('generatedAt')), i, snap))
     if len(teams) != 1:
         raise ValueError('Cannot merge different teams or snapshot kinds')
+    seasons={snapshot_season(s) for _,_,s in ordered}
+    if len(seasons)>1:
+        raise ValueError('Cannot merge incompatible or unverified different seasons')
     ordered.sort(key=lambda x: x[0])
     for a, b in zip(ordered, ordered[1:]):
         if a[0] == b[0] and a[2] != b[2]:

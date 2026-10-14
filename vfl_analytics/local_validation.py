@@ -6,7 +6,8 @@ import hashlib
 import json
 from pathlib import Path
 from .adapters import adapt_roster, _id
-from .snapshots import merge_team_snapshots
+from .snapshots import merge_team_snapshots, snapshot_season
+from .reporting import local_output,team_summary,detailed_team,write_reports
 from .market_adapter import adapt_market_snapshot
 from .evaluation import evaluate_player
 from .positions import position_modifier
@@ -59,6 +60,7 @@ def inventory_entry(path, snapshot):
     walk(snapshot)
     return {'path':str(path.resolve()),'filename':path.name,'bytes':path.stat().st_size,
             'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),
+            'snapshot_id':'sha256:'+hashlib.sha256(path.read_bytes()).hexdigest(),
             **{k:snapshot.get(k) for k in ('kind','depth','exporterVersion','teamId','opponentId','generatedAt')},
             'section_collection_times':times,'sections':sorted(snapshot),
             'roster_rows':len(roster),'unique_players':len(set(_ids(roster))),
@@ -124,41 +126,58 @@ def analyze_team(snapshots, *, lineups=True):
     return report
 
 
-def validate_directory(source, output):
-    source=Path(source).resolve(); output=Path(output).resolve()
-    # Accidental public reports must not contain raw observations.
-    if 'local_data' not in output.parts:
-        raise ValueError('Detailed validation output must be under local_data/')
+def validate_directory(source, output, *, team_ids=None, detailed=False, raw_diagnostics=False):
+    from .validation import identity
+    source=Path(source).resolve(); output=local_output(output)
     output.mkdir(parents=True,exist_ok=True)
-    documents=[]; inventory=[]
+    documents=[]; inventory=[];groups={};group_issues=[]
+    selected=None if team_ids is None else {identity(s,collector=True) for s in team_ids}
     for path in sorted(source.glob('*.json')):
         snapshot=json.loads(path.read_text(encoding='utf-8-sig'),parse_constant=lambda x:(_ for _ in ()).throw(ValueError('Nonfinite JSON')))
-        documents.append(snapshot);inventory.append(inventory_entry(path,snapshot))
-    report={'inventory':inventory,'teams':{},'market':[],'bids':[]}
-    for kind,label in [('vfl-own-team-context','own'),('vfl-opponent-context','opponent')]:
-        rows=[s for s in documents if s.get('kind')==kind]
-        if rows: report['teams'][label]=analyze_team(rows)
+        kind=snapshot.get('kind')
+        is_team=kind in ('vfl-own-team-context','vfl-opponent-context')
+        sid=identity(snapshot.get('teamId',snapshot.get('opponentId')),collector=True) if is_team else None
+        if selected is not None and (not is_team or sid not in selected):continue
+        entry=inventory_entry(path,snapshot);inventory.append(entry)
+        snapshot['_snapshot_id']=entry['snapshot_id'];documents.append(snapshot)
+        if is_team:
+            try:season=snapshot_season(snapshot)
+            except ValueError as exc:
+                group_issues.append({'source_id':entry['snapshot_id'],'error':str(exc)});continue
+            groups.setdefault((kind,sid,season),[]).append(snapshot)
+    report={'schema_version':2,'inventory':inventory,'teams':{},'market':[],'bids':[],'group_issues':group_issues}
+    details={'teams':{}} if detailed else None
+    raw={'snapshots':documents,'teams':{}} if raw_diagnostics else None
+    for (kind,sid,season),rows in groups.items():
+        role='own' if kind=='vfl-own-team-context' else 'opponent'
+        same_role=sum(k[0]==kind for k in groups)
+        label=role if same_role==1 else f'{role}:{sid}:{season if season is not None else "unknown"}'
+        full=analyze_team(rows)
+        report['teams'][label]=team_summary(full,[r['_snapshot_id'] for r in rows],kind,sid,season)
+        if details is not None:details['teams'][label]=detailed_team(full)
+        if raw is not None:raw['teams'][label]={'merge':full['merge'],'adapter_evidence':full['adapted']['evidence_by_id']}
     for snapshot in sorted(documents,key=lambda s:s.get('generatedAt','')):
         if snapshot.get('kind') in ('vfl-transfer-market','vfl-transfer-bids'):
             result=adapt_market_snapshot(snapshot)
-            report['bids' if snapshot['kind']=='vfl-transfer-bids' else 'market'].append(result)
+            compact={k:v for k,v in result.items() if k not in ('rows','observation')}
+            compact['source_id']=snapshot['_snapshot_id']
+            report['bids' if snapshot['kind']=='vfl-transfer-bids' else 'market'].append(compact)
     report['match_smoke']={'own':report['teams'].get('own',{}).get('join'),
         'opponent':report['teams'].get('opponent',{}).get('join'),
-        'win_draw_loss':None,'reason':'No trained/calibrated outcome model; opponent physical data unknown',
+        'win_draw_loss':None,'reason':'No trained/calibrated outcome model; opponent form unknown',
         'game_actions':[]}
-    (output/'validation.json').write_text(json.dumps(report,ensure_ascii=False,indent=2,allow_nan=False)+'\n',encoding='utf8')
-    text=['# Local inventory (private)','','Exact input paths and collector timestamps:','']
-    for entry in inventory:
-        text += [f"- `{entry['path']}` — {entry['bytes']} bytes; {entry['generatedAt']}; {entry['kind']}; {entry['depth']}; Assistant {entry['exporterVersion']}",
-                 f"  Roster {entry['roster_rows']}, unique {entry['unique_players']}, details {entry['detail_rows']}, season {entry['season_stat_rows']}; sections {', '.join(entry['sections'])}."]
-    (output/'inventory.md').write_text('\n'.join(text)+'\n',encoding='utf8')
+    write_reports(output,report,details,raw)
     return report
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('source');parser.add_argument('--output',required=True)
-    args=parser.parse_args();report=validate_directory(args.source,args.output)
+    parser.add_argument('--team-id',action='append',dest='team_ids')
+    parser.add_argument('--detailed',action='store_true')
+    parser.add_argument('--raw-diagnostics',action='store_true')
+    args=parser.parse_args();report=validate_directory(args.source,args.output,team_ids=args.team_ids,
+        detailed=args.detailed,raw_diagnostics=args.raw_diagnostics)
     # Console contains aggregate counts only.
     print(json.dumps({'files':len(report['inventory']),
         'teams':{k:{key:(len(value) if isinstance(value,list) else value) for key,value in v['join'].items()} for k,v in report['teams'].items()},

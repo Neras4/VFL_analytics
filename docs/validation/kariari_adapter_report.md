@@ -1,28 +1,29 @@
-# Adapter validation
+# Adapter report after review D–F
 
-Baseline: `python -m pytest -q -p no:cacheprovider --basetemp ../work/pytest-v023-baseline-approved`: **432 passed in 12.56s**. Initial sandbox run failed with Windows temporary-directory ACL errors; no test logic was skipped.
+Nine Assistant 0.5.11 exports inspected locally. Own: 21 roster IDs, 21 Deep
+profiles and 21 season-stat joins; accepted 21, rejected 0. Opponent: 27 roster
+IDs and 27 Deep profiles; accepted 27, rejected 0. Club sections remain intact.
+No duplicate or orphan detail IDs. Source hashes/times and exact paths stay local.
 
-| Input | Roster unique | Deep joined | Season joined | Accepted | Rejected | Errors | Warnings | Field conflicts |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| own | 21 | 21 | 21 | 21 | 0 | 0 | 21 | 0 |
-| opponent | 27 | 27 | 0 | 27 | 0 | 0 | 108 | 54 |
+Opponent fatigue: 27 numeric displayed profile observations now normalized;
+form remains unknown for all 27. Numeric roster (including zero) retains priority.
+Only the verified opponent 0.5.11 hidden-form gate permits null fallback; older
+profile collections and unresolved conflicts are withheld. Own competitive nulls
+retain prior semantics. Per-player observation times are not exported: collection
+reference and its semantics are recorded separately. Provenance retains both raw
+observations and selection reason/confidence.
 
-No duplicate roster/detail IDs and no missing/orphan detail profiles. Own season joins complete; opponent season section is absent, not a malformed export. Warnings are missing information, not rejected players: own 21 missing study percentages; opponent 27 each missing physical state, favorite style, study percentage and contract.
+Same-season completed style history now confirms one own player's favorite style
+at 100%; the latest 5/5 supersedes the prior 4/5. Other 20 labels remain unverified.
+History links by ID/type/date/season, never name or sum of levels. Growth/decline,
+injury and loyalty studies cannot verify a style. Conflicts produce diagnostics.
 
-54 opponent conflicts are retained in evidence: 27 roster-null fatigue versus profile numeric fatigue, and 27 roster realStrength versus profile-null realStrength. Roster values, including null, win. Missing availability remains UNKNOWN for all 48 players. No label is promoted to fully studied style.
+Normalization errors 0; own missing-study warnings 20, opponent missing form,
+style, study and contracts 27 each (108). Total missing-data warnings 128.
+54 raw field-value differences remain in evidence (including resolved null versus
+numeric observations); they are not 54 unresolved numeric fatigue conflicts.
+Match availability is unknown for all 48. Market rows and bid states stay separate.
 
-## Schema differences and fixes
-
-- Normal has club sections that Deep omits: merge present sections recursively; preserve provenance and latest observations. Lists are whole observations, except profiles joined by stable ID. Latest roster defines membership; departed players are not resurrected.
-- Profile `info.style: "Неизвестно"` is a normal missing-value sentinel, not an unsupported playing style.
-- Opponent has salary/value in `info` with no contract. Fixed optional fallback that previously ignored these fields.
-- Player specials are arrays with bare level-one codes; market/bid specials are space-separated strings. Separate market boundary preserves both contracts.
-- Market styles expose possibleStyles sets. No single favorite style or full study is inferred.
-- requested sort and applied flag differ; pagination is not a guarantee of complete results.
-- Bids are timestamped independent states; no union of successive observations.
-- selectedStats, rosterSeasonStats, profile minutes, contract and recent match evidence remain separate.
-- Contract.current malformed structure now causes a local record error instead of an uncaught AttributeError.
-
-Detailed field evidence and raw local diagnostics remain under ignored local_data. Public fixtures are allowlisted structural slices with replacement names/IDs/countries and financial values, no URLs, raw HTML/text, contract identities or bid amounts. Observed labels concern source structure, not generator accuracy.
-
-Checkpoint A: full suite **458 passed in 12.31s**; after optional season-stat hardening, focused observed contract suite **26 passed in 1.18s**. Full suite repeated at next checkpoint.
+See phase1_review_fixes.md and review_source_evidence.json for source findings and
+tests. Public fixtures are minimized, anonymous structural slices. Raw observations,
+complete contracts/finances, personal names and user paths remain in ignored local_data.

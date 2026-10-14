@@ -3,14 +3,15 @@
     "version": "0.5.11",
     "tree_sha": "988f7c662f5e671fd96ed6d6352c6fe7bce5b95a",
     "content_blob_sha": "321ef4abdef9e22ed46068780a7d5feade4f059b",
-    "url": "https://github.com/Neras4/vfl-assistant-extension/blob/988f7c662f5e671fd96ed6d6352c6fe7bce5b95a/content.js",
+    "url": "https://github.com/Neras4/vfl-assistant-extension/blob/main/content.js",
     "findings": [
       "rosterCompact gates fatigue on args[13] > 0 (visible form); null does not prove unavailable fatigue",
       "parsePlayerInfo reads displayed Усталость independently with cellNumber",
       "mergePlayerDetails top-level fatigue copies roster; it is not an independent profile observation",
       "generatedAt is assigned before Deep scan, not a per-player observation timestamp",
       "parseScoutingHistory records completed rows with date, playerId, studyType, level/maxLevel; collectManagement validates current selected season"
-    ]
+    ],
+    "immutable_blob_api": "https://api.github.com/repos/Neras4/vfl-assistant-extension/git/blobs/321ef4abdef9e22ed46068780a7d5feade4f059b"
   },
   "rules": {
     "url": "https://vfliga.com/rules.php?page=103",

@@ -164,3 +164,25 @@ UNVERIFIED/UNKNOWN metadata. Malformed links now consistently raise ValueError.
 API additions: adapter accepted/rejected/error_count/warning_count; raw source
 observations in evidence_by_id are private when fed private exports. Do not publish
 unfiltered CLI adapt/merge outputs. Existing normalized Player fields unchanged.
+
+
+## Review D–F contract refinements (0.2.3 unchanged)
+
+Opponent Assistant 0.5.11 fatigue null gated on hidden form may use independent
+same-collection info.fatigue. Numeric roster including zero still wins; stale or
+unresolved conflicting profiles withheld. Other null semantics unchanged. Collection
+reference is not invented per-player time. Same-season completed style studies
+can supply 20×level percent; latest state is not an additive history.
+
+Optimizer style_summaries precede global top_n; evaluated_style_formations now
+counts actual style/plan pairs, not returned candidates. Conservative values use
+value when lower is null. Diagnostic alternative deltas exclude unknown effects.
+
+Validator report schema 2: compact teams/candidate registry/source refs by default,
+optional details.json and raw_diagnostics.json. Root is the resolved project
+local_data storage; matching a path component is insufficient. Team groups are
+kind/ID/current season, with legacy own/opponent aliases only for a single group.
+Missing/known seasons cannot silently merge. Selected historical stats are not
+used as a current-state season. Additional CLI --team-id, --detailed,
+--raw-diagnostics. Consumers of former raw validation.json must use optional details
+or raw output explicitly; this reporting schema change is intentional.

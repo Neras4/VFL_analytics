@@ -110,7 +110,7 @@ def adapt_roster(snapshot):
             if not isinstance(current_contract,dict):
                 raise ValueError('contract.current must be object or null')
             provenance={}; conflicts=[]
-            # A present roster key, including null, always wins over profile copies.
+            # General fields retain roster priority; fatigue has a verified collector-specific selector below.
             def field(key, alternate=None, alternate_source=None):
                 candidates=[(label,source[key]) for label,source in
                             [('roster',row),('playerDetails',detail),('playerDetails.info',info)] if key in source]
