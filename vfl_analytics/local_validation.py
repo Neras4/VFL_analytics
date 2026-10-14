@@ -10,7 +10,8 @@ from .snapshots import merge_team_snapshots
 from .market_adapter import adapt_market_snapshot
 from .evaluation import evaluate_player
 from .positions import position_modifier
-from .models import PositionPlan, base_position
+from .models import PositionPlan, base_position, STYLE_NAMES
+from .explain import explain_lineup
 from .lineup import optimize_lineups
 from .rule_data import _data
 from .abilities import captain_coefficient
@@ -91,7 +92,7 @@ def analyze_team(snapshots, *, lineups=True):
     for p in players:
         report['position_grid'][p.id]={slot:position_modifier(p.positions,slot).to_dict()
             for slot in sorted(NATIVE_POSITIONS|SPECIAL_POSITIONS)}
-        for style in ('normal','spartak','bb'):
+        for style in STYLE_NAMES:
             report['evaluations'].append(evaluate_player(p,p.positions[0],style,defense_formation='line').to_dict())
     # Table-defined conditions, explicitly hypothetical. Never next-match weather.
     weather=_data('weather.json.gz')['temperatures'][0]
@@ -100,7 +101,7 @@ def analyze_team(snapshots, *, lineups=True):
     if lineups:
         report['lineups']={}
         for mode in ('known_components','conservative','pareto'):
-            args=dict(styles=['normal','spartak','bb'],mode=mode,top_n=9)
+            args=dict(styles=list(STYLE_NAMES),mode=mode,top_n=9)
             result=optimize_lineups(players,scenario_plans(),**args)
             repeated=optimize_lineups(players,scenario_plans(),**args)
             if result!=repeated: raise AssertionError('Nondeterministic optimizer result')
@@ -109,6 +110,17 @@ def analyze_team(snapshots, *, lineups=True):
                 if len(rows)!=11 or len({r['player_id'] for r in rows})!=11 or sum(base_position(r['slot'])=='GK' for r in rows)!=1:
                     raise AssertionError('Invalid assignment invariants')
             report['lineups'][mode]={**result,'deterministic_repeat':True}
+        report['styles']={}
+        for style in STYLE_NAMES:
+            known=report['lineups']['known_components']['style_summaries'][style]
+            conservative=report['lineups']['conservative']['style_summaries'][style]
+            pareto=report['lineups']['pareto']['style_summaries'][style]
+            best=known['best_known_proxy']
+            plan=next((p for p in scenario_plans() if best and list(p.slots)==best['slots']),None)
+            report['styles'][style]={'known':known,'conservative':conservative,'pareto':pareto,
+                'explanation':explain_lineup(players,plan,best) if best else None,
+                'scheme_comparisons':[{'slots':c['slots'],'proxy_gap_from_best':best['ranking_score']-c['ranking_score'],
+                    'full_preference':'UNKNOWN'} for c in known['formation_candidates']] if best else []}
     return report
 
 

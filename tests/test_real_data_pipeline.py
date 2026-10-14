@@ -19,7 +19,7 @@ from test_models import SLOTS
 def test_observed_component_pipeline(name):
     report=analyze_team([fixture(name+'_deep'),fixture(name+'_normal')],lineups=False)
     assert report['join']['accepted']==3
-    assert len(report['evaluations'])==9
+    assert len(report['evaluations'])==21  # All seven canonical styles after review E.
     json.dumps(report,allow_nan=False)
     for evaluation in report['evaluations']:
         c=evaluation['components']
